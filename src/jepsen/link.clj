@@ -32,6 +32,9 @@
                 (c/exec :git :clone "https://github.com/xavriley/ruby_ableton_link.git"))
               (c/cd "/ruby_ableton_link"
                     (c/exec :git :submodule :update :--init :--recursive)
+                    ;; enable debugging log in Link library
+                    (c/cd "ext/ableton_link/link"
+                          (c/exec (c/lit "sed -i 's/util::NullLog/util::StdLog/g' include/ableton/platforms/Config.hpp")))
                     (c/exec :gem :install :bundler)
                     (c/exec :bundle :install)
                     (c/exec :rake :compile)
@@ -39,6 +42,8 @@
                     (c/exec (c/lit "ruby -Ilib -e 'require \"bundler/setup\"; require \"ableton_link\"; link = AbletonLink.new; link.enable; 100.times { puts link.status; sleep link.time_until_subdivision_within_beat(0.0).abs }' > /link.log 2>&1 "))))))
 
     (teardown! [_ test node]
+      (c/su
+        (c/exec :rm :-rf "/ruby_ableton_link"))
       (info node "tearing down link"))
 
     db/LogFiles
