@@ -1,0 +1,62 @@
+2018-07-11 20:01:10,435{GMT}	INFO	[jepsen test runner] jepsen.core: Running test:
+ {:concurrency 5,
+ :db
+ #object[jepsen.link$db$reify__321 0x285c6918 "jepsen.link$db$reify__321@285c6918"],
+ :name "link",
+ :start-time
+ #object[org.joda.time.DateTime 0x7add838c "2018-07-11T20:01:10.000Z"],
+ :net
+ #object[jepsen.net$reify__3910 0x24d61e4 "jepsen.net$reify__3910@24d61e4"],
+ :client
+ #object[jepsen.client$reify__3766 0x380e1909 "jepsen.client$reify__3766@380e1909"],
+ :barrier
+ #object[java.util.concurrent.CyclicBarrier 0x6c6017b9 "java.util.concurrent.CyclicBarrier@6c6017b9"],
+ :ssh
+ {:username "root",
+  :password "root",
+  :strict-host-key-checking false,
+  :private-key-path nil},
+ :checker
+ #object[jepsen.checker$unbridled_optimism$reify__3589 0x7b66322e "jepsen.checker$unbridled_optimism$reify__3589@7b66322e"],
+ :nemesis
+ #object[jepsen.nemesis$reify__3993 0x2f0bfe17 "jepsen.nemesis$reify__3993@2f0bfe17"],
+ :active-histories #<Atom@34aeacd1: #{}>,
+ :nodes ["n1" "n2" "n3" "n4" "n5"],
+ :test-count 1,
+ :generator
+ #object[jepsen.generator$reify__2233 0x4a37191a "jepsen.generator$reify__2233@4a37191a"],
+ :os
+ #object[jepsen.os.debian$reify__311 0x1491344a "jepsen.os.debian$reify__311@1491344a"],
+ :time-limit 60,
+ :model {}}
+
+2018-07-11 20:01:11,239{GMT}	INFO	[jepsen node n3] jepsen.os.debian: n3 setting up debian
+2018-07-11 20:01:11,239{GMT}	INFO	[jepsen node n2] jepsen.os.debian: n2 setting up debian
+2018-07-11 20:01:11,239{GMT}	INFO	[jepsen node n1] jepsen.os.debian: n1 setting up debian
+2018-07-11 20:01:11,239{GMT}	INFO	[jepsen node n5] jepsen.os.debian: n5 setting up debian
+2018-07-11 20:01:11,240{GMT}	INFO	[jepsen node n4] jepsen.os.debian: n4 setting up debian
+2018-07-11 20:01:13,229{GMT}	INFO	[jepsen node n1] jepsen.link: n1 tearing down link
+2018-07-11 20:01:13,229{GMT}	INFO	[jepsen node n3] jepsen.link: n3 tearing down link
+2018-07-11 20:01:13,228{GMT}	INFO	[jepsen node n2] jepsen.link: n2 tearing down link
+2018-07-11 20:01:13,229{GMT}	INFO	[jepsen node n5] jepsen.link: n5 tearing down link
+2018-07-11 20:01:13,229{GMT}	INFO	[jepsen node n4] jepsen.link: n4 tearing down link
+2018-07-11 20:01:13,353{GMT}	INFO	[jepsen node n1] jepsen.os.debian: Installing #{libssl-dev rubygems}
+2018-07-11 20:01:13,353{GMT}	INFO	[jepsen node n2] jepsen.os.debian: Installing #{libssl-dev rubygems}
+2018-07-11 20:01:13,353{GMT}	INFO	[jepsen node n4] jepsen.os.debian: Installing #{libssl-dev rubygems}
+2018-07-11 20:01:13,353{GMT}	INFO	[jepsen node n5] jepsen.os.debian: Installing #{libssl-dev rubygems}
+2018-07-11 20:01:13,376{GMT}	INFO	[jepsen node n3] jepsen.os.debian: Installing #{libssl-dev rubygems}
+2018-07-11 20:01:17,944{GMT}	INFO	[jepsen node n3] jepsen.link: Installing packages (this takes several minutes)
+2018-07-11 20:01:17,946{GMT}	INFO	[jepsen node n3] jepsen.link: Cloning https://github.com/xavriley/ruby_ableton_link.git
+2018-07-11 20:01:18,327{GMT}	INFO	[jepsen node n5] jepsen.link: Installing packages (this takes several minutes)
+2018-07-11 20:01:18,330{GMT}	INFO	[jepsen node n5] jepsen.link: Cloning https://github.com/xavriley/ruby_ableton_link.git
+2018-07-11 20:01:18,528{GMT}	INFO	[jepsen node n4] jepsen.link: Installing packages (this takes several minutes)
+2018-07-11 20:01:18,530{GMT}	INFO	[jepsen node n4] jepsen.link: Cloning https://github.com/xavriley/ruby_ableton_link.git
+2018-07-11 20:01:18,803{GMT}	INFO	[jepsen node n2] jepsen.link: Installing packages (this takes several minutes)
+2018-07-11 20:01:18,803{GMT}	INFO	[jepsen node n1] jepsen.link: Installing packages (this takes several minutes)
+2018-07-11 20:01:18,806{GMT}	INFO	[jepsen node n2] jepsen.link: Cloning https://github.com/xavriley/ruby_ableton_link.git
+2018-07-11 20:01:18,806{GMT}	INFO	[jepsen node n1] jepsen.link: Cloning https://github.com/xavriley/ruby_ableton_link.git
+2018-07-11 20:01:18,931{GMT}	INFO	[jepsen node n4] jepsen.link: n4 tearing down link
+2018-07-11 20:01:18,932{GMT}	INFO	[jepsen node n3] jepsen.link: n3 tearing down link
+2018-07-11 20:01:18,931{GMT}	INFO	[jepsen node n5] jepsen.link: n5 tearing down link
+2018-07-11 20:01:18,934{GMT}	INFO	[jepsen node n1] jepsen.link: n1 tearing down link
+2018-07-11 20:01:18,936{GMT}	INFO	[jepsen node n2] jepsen.link: n2 tearing down link

@@ -1,0 +1,64 @@
+2018-07-11 19:46:40,603{GMT}	INFO	[jepsen test runner] jepsen.core: Running test:
+ {:concurrency 5,
+ :db
+ #object[jepsen.link$db$reify__321 0x285c6918 "jepsen.link$db$reify__321@285c6918"],
+ :name "link",
+ :start-time
+ #object[org.joda.time.DateTime 0x7add838c "2018-07-11T19:46:40.000Z"],
+ :net
+ #object[jepsen.net$reify__3910 0x24d61e4 "jepsen.net$reify__3910@24d61e4"],
+ :client
+ #object[jepsen.client$reify__3766 0x380e1909 "jepsen.client$reify__3766@380e1909"],
+ :barrier
+ #object[java.util.concurrent.CyclicBarrier 0x6c6017b9 "java.util.concurrent.CyclicBarrier@6c6017b9"],
+ :ssh
+ {:username "root",
+  :password "root",
+  :strict-host-key-checking false,
+  :private-key-path nil},
+ :checker
+ #object[jepsen.checker$unbridled_optimism$reify__3589 0x7b66322e "jepsen.checker$unbridled_optimism$reify__3589@7b66322e"],
+ :nemesis
+ #object[jepsen.nemesis$reify__3993 0x2f0bfe17 "jepsen.nemesis$reify__3993@2f0bfe17"],
+ :active-histories #<Atom@34aeacd1: #{}>,
+ :nodes ["n1" "n2" "n3" "n4" "n5"],
+ :test-count 1,
+ :generator
+ #object[jepsen.generator$reify__2233 0x4a37191a "jepsen.generator$reify__2233@4a37191a"],
+ :os
+ #object[jepsen.os.debian$reify__311 0x1491344a "jepsen.os.debian$reify__311@1491344a"],
+ :time-limit 60,
+ :model {}}
+
+2018-07-11 19:46:41,417{GMT}	INFO	[jepsen node n4] jepsen.os.debian: n4 setting up debian
+2018-07-11 19:46:41,418{GMT}	INFO	[jepsen node n3] jepsen.os.debian: n3 setting up debian
+2018-07-11 19:46:41,418{GMT}	INFO	[jepsen node n1] jepsen.os.debian: n1 setting up debian
+2018-07-11 19:46:41,419{GMT}	INFO	[jepsen node n2] jepsen.os.debian: n2 setting up debian
+2018-07-11 19:46:41,419{GMT}	INFO	[jepsen node n5] jepsen.os.debian: n5 setting up debian
+2018-07-11 19:46:42,145{GMT}	WARN	[jepsen node n5] jepsen.control: Encountered error with conn [:control "n5"]; reopening
+2018-07-11 19:46:42,337{GMT}	WARN	[jepsen node n4] jepsen.control: Encountered error with conn [:control "n4"]; reopening
+2018-07-11 19:46:43,988{GMT}	INFO	[jepsen node n2] jepsen.link: n2 tearing down link
+2018-07-11 19:46:43,988{GMT}	INFO	[jepsen node n5] jepsen.link: n5 tearing down link
+2018-07-11 19:46:43,988{GMT}	INFO	[jepsen node n3] jepsen.link: n3 tearing down link
+2018-07-11 19:46:43,989{GMT}	INFO	[jepsen node n4] jepsen.link: n4 tearing down link
+2018-07-11 19:46:43,993{GMT}	INFO	[jepsen node n1] jepsen.link: n1 tearing down link
+2018-07-11 19:46:44,042{GMT}	INFO	[jepsen node n3] jepsen.os.debian: Installing #{cmake libssl-dev ruby-dev git rubygems build-essential libglib2.0-dev autoconf}
+2018-07-11 19:46:44,097{GMT}	INFO	[jepsen node n5] jepsen.os.debian: Installing #{cmake libssl-dev ruby-dev git rubygems build-essential libglib2.0-dev autoconf}
+2018-07-11 19:46:44,118{GMT}	INFO	[jepsen node n1] jepsen.os.debian: Installing #{cmake libssl-dev ruby-dev git rubygems build-essential libglib2.0-dev autoconf}
+2018-07-11 19:46:44,118{GMT}	INFO	[jepsen node n2] jepsen.os.debian: Installing #{cmake libssl-dev ruby-dev git rubygems build-essential libglib2.0-dev autoconf}
+2018-07-11 19:46:44,158{GMT}	INFO	[jepsen node n4] jepsen.os.debian: Installing #{libssl-dev rubygems libglib2.0-dev}
+2018-07-11 19:47:25,318{GMT}	INFO	[jepsen node n4] jepsen.link: Installing packages (this takes several minutes)
+2018-07-11 19:47:25,323{GMT}	INFO	[jepsen node n4] jepsen.link: Cloning https://github.com/xavriley/ruby_ableton_link.git
+2018-07-11 19:50:31,279{GMT}	INFO	[jepsen node n5] jepsen.link: Installing packages (this takes several minutes)
+2018-07-11 19:50:31,290{GMT}	INFO	[jepsen node n5] jepsen.link: Cloning https://github.com/xavriley/ruby_ableton_link.git
+2018-07-11 19:50:44,261{GMT}	INFO	[jepsen node n2] jepsen.link: Installing packages (this takes several minutes)
+2018-07-11 19:50:44,268{GMT}	INFO	[jepsen node n2] jepsen.link: Cloning https://github.com/xavriley/ruby_ableton_link.git
+2018-07-11 19:50:50,486{GMT}	INFO	[jepsen node n1] jepsen.link: Installing packages (this takes several minutes)
+2018-07-11 19:50:50,487{GMT}	INFO	[jepsen node n1] jepsen.link: Cloning https://github.com/xavriley/ruby_ableton_link.git
+2018-07-11 19:50:51,506{GMT}	INFO	[jepsen node n3] jepsen.link: Installing packages (this takes several minutes)
+2018-07-11 19:50:51,508{GMT}	INFO	[jepsen node n3] jepsen.link: Cloning https://github.com/xavriley/ruby_ableton_link.git
+2018-07-11 19:55:11,714{GMT}	INFO	[jepsen node n3] jepsen.link: n3 tearing down link
+2018-07-11 19:55:11,719{GMT}	INFO	[jepsen node n5] jepsen.link: n5 tearing down link
+2018-07-11 19:55:11,721{GMT}	INFO	[jepsen node n4] jepsen.link: n4 tearing down link
+2018-07-11 19:55:11,724{GMT}	INFO	[jepsen node n1] jepsen.link: n1 tearing down link
+2018-07-11 19:55:11,724{GMT}	INFO	[jepsen node n2] jepsen.link: n2 tearing down link

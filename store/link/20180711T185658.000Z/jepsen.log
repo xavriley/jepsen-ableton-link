@@ -1,0 +1,38 @@
+2018-07-11 18:56:58,255{GMT}	INFO	[jepsen test runner] jepsen.core: Running test:
+ {:concurrency 5,
+ :db
+ #object[jepsen.link$db$reify__321 0x7e7f3cfd "jepsen.link$db$reify__321@7e7f3cfd"],
+ :name "link",
+ :start-time
+ #object[org.joda.time.DateTime 0x606f81b5 "2018-07-11T18:56:58.000Z"],
+ :net
+ #object[jepsen.net$reify__3910 0x79b2852b "jepsen.net$reify__3910@79b2852b"],
+ :client
+ #object[jepsen.client$reify__3766 0x661d88a "jepsen.client$reify__3766@661d88a"],
+ :barrier
+ #object[java.util.concurrent.CyclicBarrier 0x7add838c "java.util.concurrent.CyclicBarrier@7add838c"],
+ :ssh
+ {:username "root",
+  :password "root",
+  :strict-host-key-checking false,
+  :private-key-path nil},
+ :checker
+ #object[jepsen.checker$unbridled_optimism$reify__3589 0x10db6131 "jepsen.checker$unbridled_optimism$reify__3589@10db6131"],
+ :nemesis
+ #object[jepsen.nemesis$reify__3993 0x76464795 "jepsen.nemesis$reify__3993@76464795"],
+ :active-histories #<Atom@43a09ce2: #{}>,
+ :nodes ["n1" "n2" "n3" "n4" "n5"],
+ :test-count 1,
+ :generator
+ #object[jepsen.generator$reify__2233 0x42fb8c87 "jepsen.generator$reify__2233@42fb8c87"],
+ :os
+ #object[jepsen.os.debian$reify__311 0x43e065f2 "jepsen.os.debian$reify__311@43e065f2"],
+ :time-limit 60,
+ :model {}}
+
+2018-07-11 18:56:59,213{GMT}	INFO	[jepsen node n4] jepsen.os.debian: n4 setting up debian
+2018-07-11 18:56:59,213{GMT}	INFO	[jepsen node n1] jepsen.os.debian: n1 setting up debian
+2018-07-11 18:56:59,213{GMT}	INFO	[jepsen node n5] jepsen.os.debian: n5 setting up debian
+2018-07-11 18:56:59,214{GMT}	INFO	[jepsen node n3] jepsen.os.debian: n3 setting up debian
+2018-07-11 18:56:59,213{GMT}	INFO	[jepsen node n2] jepsen.os.debian: n2 setting up debian
+2018-07-11 18:57:28,395{GMT}	WARN	[jepsen node n4] jepsen.control: Encountered error with conn [:control "n4"]; reopening

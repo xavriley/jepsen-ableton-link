@@ -1,0 +1,89 @@
+2018-07-11 20:50:18,249{GMT}	INFO	[jepsen test runner] jepsen.core: Running test:
+ {:concurrency 5,
+ :db
+ #object[jepsen.link$db$reify__321 0x169268a7 "jepsen.link$db$reify__321@169268a7"],
+ :name "link",
+ :start-time
+ #object[org.joda.time.DateTime 0x50f097b5 "2018-07-11T20:50:18.000Z"],
+ :net
+ #object[jepsen.net$reify__3910 0x303f1234 "jepsen.net$reify__3910@303f1234"],
+ :client
+ #object[jepsen.client$reify__3766 0x553bc36c "jepsen.client$reify__3766@553bc36c"],
+ :barrier
+ #object[java.util.concurrent.CyclicBarrier 0x10db6131 "java.util.concurrent.CyclicBarrier@10db6131"],
+ :ssh
+ {:username "root",
+  :password "root",
+  :strict-host-key-checking false,
+  :private-key-path nil},
+ :checker
+ #object[jepsen.checker$unbridled_optimism$reify__3589 0x3f183caa "jepsen.checker$unbridled_optimism$reify__3589@3f183caa"],
+ :nemesis
+ #object[jepsen.nemesis$reify__3993 0x370c1968 "jepsen.nemesis$reify__3993@370c1968"],
+ :active-histories #<Atom@795f5d51: #{}>,
+ :nodes ["n1" "n2" "n3" "n4" "n5"],
+ :test-count 1,
+ :generator
+ #object[jepsen.generator$reify__2233 0x3c79088e "jepsen.generator$reify__2233@3c79088e"],
+ :os
+ #object[jepsen.os.debian$reify__311 0x12bbfc54 "jepsen.os.debian$reify__311@12bbfc54"],
+ :time-limit 60,
+ :model {}}
+
+2018-07-11 20:50:19,005{GMT}	INFO	[jepsen node n5] jepsen.os.debian: n5 setting up debian
+2018-07-11 20:50:19,005{GMT}	INFO	[jepsen node n3] jepsen.os.debian: n3 setting up debian
+2018-07-11 20:50:19,005{GMT}	INFO	[jepsen node n4] jepsen.os.debian: n4 setting up debian
+2018-07-11 20:50:19,005{GMT}	INFO	[jepsen node n2] jepsen.os.debian: n2 setting up debian
+2018-07-11 20:50:19,005{GMT}	INFO	[jepsen node n1] jepsen.os.debian: n1 setting up debian
+2018-07-11 20:50:19,806{GMT}	WARN	[jepsen node n1] jepsen.control: Encountered error with conn [:control "n1"]; reopening
+2018-07-11 20:50:22,109{GMT}	INFO	[jepsen node n4] jepsen.link: n4 tearing down link
+2018-07-11 20:50:22,109{GMT}	INFO	[jepsen node n1] jepsen.link: n1 tearing down link
+2018-07-11 20:50:22,110{GMT}	INFO	[jepsen node n2] jepsen.link: n2 tearing down link
+2018-07-11 20:50:22,110{GMT}	INFO	[jepsen node n5] jepsen.link: n5 tearing down link
+2018-07-11 20:50:22,110{GMT}	INFO	[jepsen node n3] jepsen.link: n3 tearing down link
+2018-07-11 20:50:22,218{GMT}	INFO	[jepsen node n4] jepsen.os.debian: Installing #{libssl-dev rubygems}
+2018-07-11 20:50:22,223{GMT}	INFO	[jepsen node n2] jepsen.os.debian: Installing #{libssl-dev rubygems}
+2018-07-11 20:50:22,233{GMT}	INFO	[jepsen node n1] jepsen.os.debian: Installing #{libssl-dev rubygems}
+2018-07-11 20:50:22,235{GMT}	INFO	[jepsen node n5] jepsen.os.debian: Installing #{libssl-dev rubygems}
+2018-07-11 20:50:22,236{GMT}	INFO	[jepsen node n3] jepsen.os.debian: Installing #{libssl-dev rubygems}
+2018-07-11 20:50:27,043{GMT}	INFO	[jepsen node n5] jepsen.link: Installing packages (this takes several minutes)
+2018-07-11 20:50:27,244{GMT}	INFO	[jepsen node n3] jepsen.link: Installing packages (this takes several minutes)
+2018-07-11 20:50:27,262{GMT}	INFO	[jepsen node n2] jepsen.link: Installing packages (this takes several minutes)
+2018-07-11 20:50:27,481{GMT}	INFO	[jepsen node n1] jepsen.link: Installing packages (this takes several minutes)
+2018-07-11 20:50:27,564{GMT}	INFO	[jepsen node n4] jepsen.link: Installing packages (this takes several minutes)
+2018-07-11 20:50:54,312{GMT}	INFO	[jepsen node n3] jepsen.link: n3 Link installed - starting test
+2018-07-11 20:50:54,730{GMT}	INFO	[jepsen node n5] jepsen.link: n5 Link installed - starting test
+2018-07-11 20:50:54,832{GMT}	INFO	[jepsen node n4] jepsen.link: n4 Link installed - starting test
+2018-07-11 20:50:55,033{GMT}	INFO	[jepsen node n1] jepsen.link: n1 Link installed - starting test
+2018-07-11 20:50:55,246{GMT}	INFO	[jepsen node n2] jepsen.link: n2 Link installed - starting test
+2018-07-11 20:51:46,064{GMT}	INFO	[jepsen nemesis] jepsen.core: Starting nemesis
+2018-07-11 20:51:46,066{GMT}	INFO	[jepsen worker 0] jepsen.core: Starting worker 0
+2018-07-11 20:51:46,068{GMT}	INFO	[jepsen worker 1] jepsen.core: Starting worker 1
+2018-07-11 20:51:46,071{GMT}	INFO	[jepsen worker 2] jepsen.core: Starting worker 2
+2018-07-11 20:51:46,072{GMT}	INFO	[jepsen nemesis] jepsen.core: Running nemesis
+2018-07-11 20:51:46,077{GMT}	INFO	[jepsen worker 3] jepsen.core: Starting worker 3
+2018-07-11 20:51:46,080{GMT}	INFO	[jepsen worker 0] jepsen.core: Running worker 0
+2018-07-11 20:51:46,080{GMT}	INFO	[jepsen worker 4] jepsen.core: Starting worker 4
+2018-07-11 20:51:46,083{GMT}	INFO	[jepsen worker 1] jepsen.core: Running worker 1
+2018-07-11 20:51:46,084{GMT}	INFO	[jepsen worker 2] jepsen.core: Running worker 2
+2018-07-11 20:51:46,087{GMT}	INFO	[jepsen nemesis] jepsen.core: Stopping nemesis
+2018-07-11 20:51:46,089{GMT}	INFO	[jepsen worker 3] jepsen.core: Running worker 3
+2018-07-11 20:51:46,091{GMT}	INFO	[jepsen worker 0] jepsen.core: Stopping worker 0
+2018-07-11 20:51:46,093{GMT}	INFO	[jepsen worker 4] jepsen.core: Running worker 4
+2018-07-11 20:51:46,095{GMT}	INFO	[jepsen worker 1] jepsen.core: Stopping worker 1
+2018-07-11 20:51:46,100{GMT}	INFO	[jepsen worker 2] jepsen.core: Stopping worker 2
+2018-07-11 20:51:46,103{GMT}	INFO	[jepsen worker 3] jepsen.core: Stopping worker 3
+2018-07-11 20:51:46,111{GMT}	INFO	[jepsen worker 4] jepsen.core: Stopping worker 4
+2018-07-11 20:51:46,141{GMT}	INFO	[jepsen test runner] jepsen.core: Run complete, writing
+2018-07-11 20:51:46,263{GMT}	INFO	[jepsen node n2] jepsen.link: n2 tearing down link
+2018-07-11 20:51:46,263{GMT}	INFO	[jepsen node n3] jepsen.link: n3 tearing down link
+2018-07-11 20:51:46,264{GMT}	INFO	[jepsen node n5] jepsen.link: n5 tearing down link
+2018-07-11 20:51:46,264{GMT}	INFO	[jepsen node n4] jepsen.link: n4 tearing down link
+2018-07-11 20:51:46,265{GMT}	INFO	[jepsen node n1] jepsen.link: n1 tearing down link
+2018-07-11 20:51:46,302{GMT}	INFO	[jepsen test runner] jepsen.core: Analyzing
+2018-07-11 20:51:46,311{GMT}	INFO	[jepsen test runner] jepsen.core: Analysis complete
+2018-07-11 20:51:46,330{GMT}	INFO	[jepsen results] jepsen.store: Wrote /jepsen/store/link/20180711T205018.000Z/results.edn
+2018-07-11 20:51:46,367{GMT}	INFO	[main] jepsen.core: {:valid? true}
+
+
+Everything looks good! ヽ(‘ー`)ノ

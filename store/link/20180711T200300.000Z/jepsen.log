@@ -1,0 +1,60 @@
+2018-07-11 20:03:00,961{GMT}	INFO	[jepsen test runner] jepsen.core: Running test:
+ {:concurrency 5,
+ :db
+ #object[jepsen.link$db$reify__321 0x78a0ff63 "jepsen.link$db$reify__321@78a0ff63"],
+ :name "link",
+ :start-time
+ #object[org.joda.time.DateTime 0x3662bdff "2018-07-11T20:03:00.000Z"],
+ :net
+ #object[jepsen.net$reify__3910 0x2149594a "jepsen.net$reify__3910@2149594a"],
+ :client
+ #object[jepsen.client$reify__3766 0x2d5ef498 "jepsen.client$reify__3766@2d5ef498"],
+ :barrier
+ #object[java.util.concurrent.CyclicBarrier 0x4730e0f0 "java.util.concurrent.CyclicBarrier@4730e0f0"],
+ :ssh
+ {:username "root",
+  :password "root",
+  :strict-host-key-checking false,
+  :private-key-path nil},
+ :checker
+ #object[jepsen.checker$unbridled_optimism$reify__3589 0x63538bb4 "jepsen.checker$unbridled_optimism$reify__3589@63538bb4"],
+ :nemesis
+ #object[jepsen.nemesis$reify__3993 0x3206174f "jepsen.nemesis$reify__3993@3206174f"],
+ :active-histories #<Atom@54067fdc: #{}>,
+ :nodes ["n1" "n2" "n3" "n4" "n5"],
+ :test-count 1,
+ :generator
+ #object[jepsen.generator$reify__2233 0x5854a18 "jepsen.generator$reify__2233@5854a18"],
+ :os
+ #object[jepsen.os.debian$reify__311 0x59b65dce "jepsen.os.debian$reify__311@59b65dce"],
+ :time-limit 60,
+ :model {}}
+
+2018-07-11 20:03:01,634{GMT}	INFO	[jepsen node n1] jepsen.os.debian: n1 setting up debian
+2018-07-11 20:03:01,634{GMT}	INFO	[jepsen node n2] jepsen.os.debian: n2 setting up debian
+2018-07-11 20:03:01,638{GMT}	INFO	[jepsen node n3] jepsen.os.debian: n3 setting up debian
+2018-07-11 20:03:01,638{GMT}	INFO	[jepsen node n4] jepsen.os.debian: n4 setting up debian
+2018-07-11 20:03:01,638{GMT}	INFO	[jepsen node n5] jepsen.os.debian: n5 setting up debian
+2018-07-11 20:03:02,405{GMT}	WARN	[jepsen node n2] jepsen.control: Encountered error with conn [:control "n2"]; reopening
+2018-07-11 20:03:02,406{GMT}	WARN	[jepsen node n1] jepsen.control: Encountered error with conn [:control "n1"]; reopening
+2018-07-11 20:03:02,460{GMT}	WARN	[jepsen node n4] jepsen.control: Encountered error with conn [:control "n4"]; reopening
+2018-07-11 20:03:04,606{GMT}	INFO	[jepsen node n5] jepsen.link: n5 tearing down link
+2018-07-11 20:03:04,606{GMT}	INFO	[jepsen node n4] jepsen.link: n4 tearing down link
+2018-07-11 20:03:04,607{GMT}	INFO	[jepsen node n2] jepsen.link: n2 tearing down link
+2018-07-11 20:03:04,607{GMT}	INFO	[jepsen node n3] jepsen.link: n3 tearing down link
+2018-07-11 20:03:04,606{GMT}	INFO	[jepsen node n1] jepsen.link: n1 tearing down link
+2018-07-11 20:03:04,740{GMT}	INFO	[jepsen node n2] jepsen.os.debian: Installing #{libssl-dev rubygems}
+2018-07-11 20:03:04,740{GMT}	INFO	[jepsen node n4] jepsen.os.debian: Installing #{libssl-dev rubygems}
+2018-07-11 20:03:04,740{GMT}	INFO	[jepsen node n5] jepsen.os.debian: Installing #{libssl-dev rubygems}
+2018-07-11 20:03:04,782{GMT}	INFO	[jepsen node n3] jepsen.os.debian: Installing #{libssl-dev rubygems}
+2018-07-11 20:03:04,783{GMT}	INFO	[jepsen node n1] jepsen.os.debian: Installing #{libssl-dev rubygems}
+2018-07-11 20:03:09,280{GMT}	INFO	[jepsen node n2] jepsen.link: Installing packages (this takes several minutes)
+2018-07-11 20:03:09,296{GMT}	INFO	[jepsen node n4] jepsen.link: Installing packages (this takes several minutes)
+2018-07-11 20:03:09,397{GMT}	INFO	[jepsen node n5] jepsen.link: Installing packages (this takes several minutes)
+2018-07-11 20:03:09,531{GMT}	INFO	[jepsen node n1] jepsen.link: Installing packages (this takes several minutes)
+2018-07-11 20:03:09,547{GMT}	INFO	[jepsen node n3] jepsen.link: n3 tearing down link
+2018-07-11 20:03:09,547{GMT}	INFO	[jepsen node n5] jepsen.link: n5 tearing down link
+2018-07-11 20:03:09,548{GMT}	INFO	[jepsen node n4] jepsen.link: n4 tearing down link
+2018-07-11 20:03:09,548{GMT}	INFO	[jepsen node n2] jepsen.link: n2 tearing down link
+2018-07-11 20:03:09,552{GMT}	INFO	[jepsen node n1] jepsen.link: n1 tearing down link
+2018-07-11 20:03:09,754{GMT}	INFO	[jepsen node n3] jepsen.link: Installing packages (this takes several minutes)
