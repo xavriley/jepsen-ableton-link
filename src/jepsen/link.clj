@@ -1,6 +1,7 @@
 (ns jepsen.link
   (:require [clojure.tools.logging :refer :all]
             [clojure.string :as str]
+            [clojure.java.shell :as shell]
             [jepsen [cli :as cli]
                     [client :as client]
                     [control :as c]
@@ -72,8 +73,9 @@
     (case (:f op)
         :read (assoc op :type :ok,
                      ;; unsafe
-                     :value (read-string (c/exec (c/lit (str "echo 'status' | nc " (:node this) " 17001")))))
-        ))
+                     :value (read-string (:out (shell/sh "nc" "-q" "1" (name (:node this)) "17001" :in "status"))))
+        :write (do (shell/sh "nc" "-q" "1" (name (:node this)) "17001" :in (str "tempo " (:value op)))
+                 (assoc op :type, :ok))))
 
   (teardown! [this test])
 
@@ -89,7 +91,7 @@
           :os debian/os
           :db (db "0.0.1")
           :client (Client. nil)
-          :generator (->> r
+          :generator (->> (gen/mix [r w])
                           (gen/stagger 1)
                           (gen/nemesis nil)
                           (gen/time-limit 15))}))
