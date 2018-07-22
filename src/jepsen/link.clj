@@ -2,14 +2,16 @@
   (:require [clojure.tools.logging :refer :all]
             [clojure.string :as str]
             [clojure.java.shell :as shell]
-            [jepsen [cli :as cli]
+            [jepsen [checker :as checker]
+                    [cli :as cli]
                     [client :as client]
                     [control :as c]
                     [db :as db]
                     [generator :as gen]
                     [tests :as tests]]
             [jepsen.control.util :as cu]
-            [jepsen.os.debian :as debian]))
+            [jepsen.os.debian :as debian]
+            [knossos.model :as model]))
 
 ;; constants
 (def logfile (str "/link.log"))
@@ -91,6 +93,8 @@
           :os debian/os
           :db (db "0.0.1")
           :client (Client. nil)
+          :model (model/register)
+          :checker (checker/linearizable)
           :generator (->> (gen/mix [r w])
                           (gen/stagger 1)
                           (gen/nemesis nil)
