@@ -78,8 +78,13 @@
   (invoke! [this test op]
     (case (:f op)
         :read (assoc op :type :ok,
-                     ;; unsafe
-                     :value (read-string (:out (shell/sh "nc" "-q" "1" (name (:node this)) "17001" :in "status"))))
+                     ;; to read we shell out to netcat sending the string "status"
+                     ;; to port 17001 on the node, which returns the current tempo
+                     ;; of that node as a string. This is parsed as a number with
+                     ;; read-string and then rounded to an integer to avoid issues around
+                     ;; floating point precision within the Ruby library that wraps the
+                     ;; Ableton Link library
+                     :value (java.lang.Math/round (read-string (:out (shell/sh "nc" "-q" "1" (name (:node this)) "17001" :in "status")))))
         :write (do (shell/sh "nc" "-q" "1" (name (:node this)) "17001" :in (str "tempo " (:value op)))
                  (assoc op :type, :ok))))
 
