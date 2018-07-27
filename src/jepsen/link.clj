@@ -109,6 +109,7 @@
                       :timeline (timeline/html)})
           :nemesis (nemesis/partitioner (comp nemesis/bridge shuffle))
           :generator (->> (gen/mix [r w])
+                          (gen/delay 2)
                           (gen/nemesis (gen/seq (cycle
                                                   [(gen/sleep 10)
                                                    {:type :info, :f :start}
