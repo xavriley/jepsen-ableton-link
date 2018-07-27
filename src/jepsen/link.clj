@@ -10,6 +10,7 @@
                     [generator :as gen]
                     [nemesis :as nemesis]
                     [tests :as tests]]
+            [jepsen.checker.timeline :as timeline]
             [jepsen.control.util :as cu]
             [jepsen.os.debian :as debian]
             [knossos.model :as model]))
@@ -95,6 +96,10 @@
           :db (db "0.0.1")
           :client (Client. nil)
           :model (model/register)
+          :checker (checker/compose
+                     {:perf (checker/perf)
+                      :linear (checker/linearizable)
+                      :timeline (timeline/html)})
           :nemesis (nemesis/partitioner (comp nemesis/bridge shuffle))
           :generator (->> (gen/mix [r w])
                           (gen/nemesis (gen/seq (cycle
