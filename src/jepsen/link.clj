@@ -121,6 +121,7 @@
   "Handles command line arguments. Can either run a test, or a web server for
   browsing results."
   [& args]
-  (cli/run! (merge (cli/single-test-cmd {:test-fn link-test})
-                   (cli/serve-cmd))
-            args))
+  (do (shell/sh "apt-get" "install" "-qy" "netcat") ;; bit of a hack as we shell out to nc on the control node
+      (cli/run! (merge (cli/single-test-cmd {:test-fn link-test})
+                       (cli/serve-cmd))
+                args)))
