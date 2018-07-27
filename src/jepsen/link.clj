@@ -47,7 +47,9 @@
                     (c/exec :bundle :install)
                     (c/exec :rake :compile)
                     (info node "Link installed - starting test")
-                    (c/exec (c/lit "bin/server > /link.log 2>&1 &"))))))
+                    (c/exec (c/lit "bin/server > /link.log 2>&1 &")))))
+      ;; allow peer discovery to stabilize
+      (Thread/sleep 5000))
 
     (teardown! [_ test node]
       (c/su
