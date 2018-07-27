@@ -8,6 +8,7 @@
                     [control :as c]
                     [db :as db]
                     [generator :as gen]
+                    [nemesis :as nemesis]
                     [tests :as tests]]
             [jepsen.control.util :as cu]
             [jepsen.os.debian :as debian]
@@ -94,11 +95,14 @@
           :db (db "0.0.1")
           :client (Client. nil)
           :model (model/register)
-          :checker (checker/linearizable)
+          :nemesis (nemesis/partitioner (comp nemesis/bridge shuffle))
           :generator (->> (gen/mix [r w])
-                          (gen/stagger 1)
-                          (gen/nemesis nil)
-                          (gen/time-limit 15))}))
+                          (gen/nemesis (gen/seq (cycle
+                                                  [(gen/sleep 10)
+                                                   {:type :info, :f :start}
+                                                   (gen/sleep 30)
+                                                   {:type :info, :f :stop}])))
+                          (gen/time-limit 120))}))
 
 (defn -main
   "Handles command line arguments. Can either run a test, or a web server for
