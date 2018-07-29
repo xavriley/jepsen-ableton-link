@@ -108,14 +108,18 @@
                       :linear (checker/linearizable)
                       :timeline (timeline/html)})
           :nemesis (nemesis/partitioner (comp nemesis/bridge shuffle))
-          :generator (->> (gen/mix [r w])
+          :generator (->>
+                          (gen/seq
+                            (cycle [(gen/once {:type :invoke, :f :write, :value 120})
+                                    (gen/mix [r w])]))
                           (gen/delay 2)
+                          (gen/singlethreaded)
                           (gen/nemesis (gen/seq (cycle
                                                   [(gen/sleep 10)
                                                    {:type :info, :f :start}
                                                    (gen/sleep 30)
                                                    {:type :info, :f :stop}])))
-                          (gen/time-limit 120))}))
+                          (gen/time-limit 30))}))
 
 (defn -main
   "Handles command line arguments. Can either run a test, or a web server for
