@@ -80,14 +80,17 @@ commands = %Q(
   set terminal png enhanced size 1600,800;
   set output "plot.png"
 
+  set autoscale x
+  set lmargin 15 # accomodate different width ytics
+
+  set multiplot layout 2, 1
+
+  set xrange [] writeback
   set xlabel 'Time (seconds)'
   set ylabel 'Tempo (bpm)'
-  set y2label "Clock offset (seconds)"
 
   set yrange [0:220]
   set ytics nomirror
-  set y2tics
-  set y2range [0:0.01]
 
   # Set linestyle 1 to blue (#0060ad)
   set style line 1 \
@@ -115,8 +118,18 @@ commands = %Q(
      ''                index 3 title 'n4' with linespoints linestyle 10, \
      ''                index 4 title 'n5' with linespoints linestyle 13
 
-  plot 'offset_data.dat' index 0 using 1:2:(sprintf("%d",column(2))) with labels point offset character 0, character 1, \
-                      '' index 1 using 1:2:(sprintf("%d",column(2))) with labels point offset character 0, character 1, \
+  #
+  set title "Clock offsets"
+
+  unset key
+  set xrange restore
+  set ytics
+  unset yrange
+  set ylabel "Clock offset (seconds)"
+  plot 'offset_data.dat' using 1:2 ti 'offset_data.dat', \
+                      '' using 1:2:3 with labels offset 0, char 1
+
+  unset multiplot
 )
 
 gnuplot(commands)

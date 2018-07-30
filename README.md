@@ -27,6 +27,10 @@ the nodes and start a session before outputting their status for 100 beats.
 
 More rigorous testing and nicer output is under development.
 
+## example plotting tempo values and clock offsets
+
+![](example_plot.png)
+
 ## License
 
 Copyright © 2018 Xavier Riley
