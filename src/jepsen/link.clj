@@ -107,7 +107,10 @@
                      {:perf (checker/perf)
                       :linear (checker/linearizable)
                       :timeline (timeline/html)})
-          :nemesis (nemesis/partitioner (comp nemesis/bridge shuffle))
+          :nemesis (nemesis/partitioner {:n1 #{:n2} ;; line topology
+                                         :n2 #{:n1 :n3}
+                                         :n3 #{:n2 :n4}
+                                         :n4 #{:n3 :n5}})
           :generator (->>
                           (gen/seq
                             (cycle [(gen/once {:type :invoke, :f :write, :value 120})
