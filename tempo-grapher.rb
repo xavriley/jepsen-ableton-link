@@ -79,7 +79,7 @@ def gnuplot(commands)
 end
 
 commands = %Q(
-  set terminal png enhanced size 1600,800;
+  set terminal pngcairo enhanced font "Helvetica,12.0" size 1600,800;
   set output "plot.png"
 
   set autoscale x
