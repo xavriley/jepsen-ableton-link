@@ -9,6 +9,7 @@
                     [db :as db]
                     [generator :as gen]
                     [nemesis :as nemesis]
+                    [net :as net]
                     [tests :as tests]]
             [jepsen.checker.timeline :as timeline]
             [jepsen.control.util :as cu]
@@ -32,8 +33,12 @@
                          :netcat
                          :ruby-dev
                          :rubygems
-                         :libglib2.0-dev])
+                         :libglib2.0-dev
+                         :wget])
         (info "Installing packages (this takes several minutes)")
+        ;; (c/exec (c/lit "wget -O toxiproxy-2.1.3.deb https://github.com/Shopify/toxiproxy/releases/download/v2.1.3/toxiproxy_2.1.3_amd64.deb"))
+        ;; (c/exec (c/lit "dpkg -i toxiproxy-2.1.3.deb"))
+        ;; (c/exec (c/lit "service toxiproxy start"))
         (c/cd "/"
               (when-not (cu/exists? "ruby_ableton_link")
                 (info "Cloning https://github.com/xavriley/ruby_ableton_link.git")
@@ -92,6 +97,32 @@
 
   (close! [_ test]))
 
+;; taken from https://github.com/jepsen-io/jepsen/blob/8cf63da6204c4ebc72b45546298dc74c028885bd/cockroachdb/src/jepsen/cockroach/nemesis.clj#L152
+(defn slowing
+  "Wraps a nemesis. Before underlying nemesis starts, slows the network by dt
+  s. When underlying nemesis resolves, restores network speeds."
+  [nem dt]
+  (reify nemesis/Nemesis
+    (setup! [this test]
+      (net/fast! (:net test) test)
+      (nemesis/setup! nem test)
+      this)
+
+    (invoke! [this test op]
+      (case (:f op)
+        :start (do (net/slow! (:net test) test {:mean (* dt 1000) :variance 1})
+                   (nemesis/invoke! nem test op))
+
+        :stop (try (nemesis/invoke! nem test op)
+                   (finally
+                     (net/fast! (:net test) test)))
+
+        (nemesis/invoke! nem test op)))
+
+    (teardown! [this test]
+      (net/fast! (:net test) test)
+      (nemesis/teardown! nem test))))
+
 (defn link-test
   "Given an options map from the command line runner (e.g. :nodes, :ssh,
   :concurrency, ...) constructs a test map"
@@ -107,10 +138,8 @@
                      {:perf (checker/perf)
                       :linear (checker/linearizable)
                       :timeline (timeline/html)})
-          :nemesis (nemesis/partitioner {:n1 #{:n2} ;; line topology
-                                         :n2 #{:n1 :n3}
-                                         :n3 #{:n2 :n4}
-                                         :n4 #{:n3 :n5}})
+          :nemesis (slowing (nemesis/partition-majorities-ring)
+                            0.5) ;; slow packets - works out as 2x this value because of round trips
           :generator (->>
                           (gen/seq
                             (cycle [(gen/once {:type :invoke, :f :write, :value 120})
@@ -118,9 +147,9 @@
                           (gen/delay 2)
                           (gen/singlethreaded)
                           (gen/nemesis (gen/seq (cycle
-                                                  [(gen/sleep 10)
+                                                  [(gen/sleep 5)
                                                    {:type :info, :f :start}
-                                                   (gen/sleep 30)
+                                                   (gen/sleep 5)
                                                    {:type :info, :f :stop}])))
                           (gen/time-limit (:time-limit opts)))}))
 
