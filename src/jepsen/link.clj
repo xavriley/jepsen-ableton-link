@@ -122,7 +122,7 @@
                                                    {:type :info, :f :start}
                                                    (gen/sleep 30)
                                                    {:type :info, :f :stop}])))
-                          (gen/time-limit 30))}))
+                          (gen/time-limit (:time-limit opts)))}))
 
 (defn -main
   "Handles command line arguments. Can either run a test, or a web server for
