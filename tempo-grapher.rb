@@ -11,7 +11,7 @@ ARGF.each do |l|
     case l
     when /:beat/
       node = get_node_name(l)
-      data = eval(l.gsub(/^[^\{]+/, '').gsub('?', ''))
+      data = eval(l.gsub(/^[^\{]+/, '').gsub('?', '').gsub(/\}(.+)\Z/, '}'))
 
       tempo_points[node] ||= {}
       tempo_points[node]["values"] ||= []
@@ -39,14 +39,16 @@ ARGF.each do |l|
       # ignore
       # puts l
     end
-  rescue
+  rescue Exception => e
+    puts l
+    puts e
   end
 end
 
 session_beat_origin = tempo_points.map {|k,v| v["values"].map{|y| y[:beat_zero] }.first }.sort.first
 data = tempo_points.map {|k,v| v["values"].map {|x| [x[:now] - session_beat_origin, x[:tempo]]} }
 
-puts "beat origin: #{session_beat_origin}"
+# puts "beat origin: #{session_beat_origin}"
 victorious_session = offset_measurements.sort_by {|h| h[:last_seen_now] }.last[:session_name]
 offset_measurements.reject! {|x| x[:session_name] != victorious_session }
 
