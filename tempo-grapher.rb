@@ -2,16 +2,63 @@ def get_node_name(line)
   line.scan(/\/(n\d)/).flatten.first
 end
 
+def parse_edn(line)
+  edn_data = line.
+    # tidy up start of line
+    gsub(/\A(.+)\{\:/, '{:').
+    # strip curly braces
+    match(/{([^\}]+)}\Z/)[1].strip.
+    # handle nested arrays - TODO: extract these properly
+    # gsub(/\[([^\]]+)\]/, ':isolated').
+    # split on ":<key> <value>"
+    split(/(:[^\s]+)\s/).
+    # remove blanks
+    reject(&:empty?).
+    # remove trailing commas
+    map {|v| v.gsub(',', '') }.
+    # replace - with _ for valid Ruby symbols
+    map {|v| v.gsub('-', '_') }.
+    # remove trailing spaces
+    map(&:strip)
+
+  # [key, val, key, val] has a to_hash method
+  # vals are currently strings - use eval to get the proper Ruby types
+  edn_data.each_slice(2).collect {|k,v| [k.gsub(':', '').to_sym, eval(v)] }.to_h
+end
+
+def nemesis_regions(data)
+  default_duration = data[1].first - data[0].first
+
+  data.each_slice(2).map {|start,stop|
+    %Q{
+      set obj rect \
+      from #{start.first}, graph 0 \
+      to   #{stop ? stop.first : start.first + default_duration}, graph 1 \
+      fillcolor rgb "#000000" \
+      fillstyle transparent solid 0.05 \
+      noborder
+    }
+  }.join("\n\n")
+end
+
+nemesis_start_time = nil
 tempo_points = {}
 offset_measurements = []
+nemesis_events = []
 last_seen_now = 0.0
 
 ARGF.each do |l|
   begin
     case l
+    when /nemesis/
+      next if l[/:isolated|healed/]
+
+      event = parse_edn(l)
+      nemesis_start_time ||= event[:time]
+      nemesis_events << [(event[:time] - nemesis_start_time) * 1e-9, event[:f]]
     when /:beat/
       node = get_node_name(l)
-      data = eval(l.gsub(/^[^\{]+/, '').gsub('?', '').gsub(/\}(.+)\Z/, '}'))
+      data = eval(l.gsub(/\A(.+)\{\:/, '{:').gsub('?', '').gsub(/\}(.+)\Z/, '}'))
 
       tempo_points[node] ||= {}
       tempo_points[node]["values"] ||= []
@@ -52,6 +99,8 @@ data = tempo_points.map {|k,v| v["values"].map {|x| [x[:now] - session_beat_orig
 victorious_session = offset_measurements.sort_by {|h| h[:last_seen_now] }.last[:session_name]
 offset_measurements.reject! {|x| x[:session_name] != victorious_session }
 
+# debug - output session name as well
+# offset_measurements.map! {|x| ["\"#{x[:node]} #{x[:session_name]}\"", x[:last_seen_now] - session_beat_origin, ((x[:offset] * 1e-6) - session_beat_origin).round(6)]}
 offset_measurements.map! {|x| [x[:node], x[:last_seen_now] - session_beat_origin, ((x[:offset] * 1e-6) - session_beat_origin).round(6)]}
 
 # WIP plotting clock offset measurements using y2 axis
@@ -61,6 +110,8 @@ offset_measurements.map! {|x| [x[:node], x[:last_seen_now] - session_beat_origin
 offset_output = offset_measurements.group_by {|x| x.first }.map {|k,v| (["# #{k}"] << v.map {|x| (x.flatten[1..2] << k).join("\t") }).join("\n") }.join("\n\n\n")
 
 output = data.map {|node| node.map {|line| line.join("\t") }.join("\n") }.join("\n\n\n")
+
+nemesis_output = nemesis_events.map {|line| line.join("\t") }.join("\n")
 
 File.open('test_output.rbdump', 'wb') do |file|
   Marshal.dump(tempo_points, file)
@@ -74,18 +125,25 @@ File.open('offset_data.dat', 'wb') do |file|
   IO.write(file, offset_output)
 end
 
+File.open('nemesis_data.dat', 'wb') do |file|
+  IO.write(file, nemesis_output)
+end
+
 def gnuplot(commands)
   IO.popen("gnuplot", "w") { |io| io.puts commands }
 end
 
 commands = %Q(
-  set terminal pngcairo enhanced font "Helvetica,12.0" size 1600,800;
+  set terminal pngcairo enhanced font "Helvetica,12.0" size 6400,800;
   set output "plot.png"
 
   set autoscale x
   set lmargin 15 # accomodate different width ytics
 
   set multiplot layout 2, 1
+
+  set style rect fc lt -1 fs solid 0.15 noborder
+  #{nemesis_regions(nemesis_events)}
 
   set xrange [] writeback
   set xlabel 'Time (seconds)'
