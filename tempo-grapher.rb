@@ -176,12 +176,12 @@ divergence_events = divergence_events.map.with_index{|x,i| [x,i] }.each_slice(2)
 # drop the initial divergence as nodes join session
 initialization_time = divergence_events.select {|x| x.last }.first.first
 if divergence_events.length.even?
-  total_divergence_time = divergence_events.each_slice(2).map {|(x,y)| y ? (y.first - x.first) : 0 }[1..-1].compact.sum
+  total_divergence_time = divergence_events.each_slice(2).map {|(x,y)| y ? (y.first - x.first) : 0 }[1..-1].compact.inject{|sum,i| sum += i }
 else
   # drop last because we don't converge again after that
   total_divergence_time = divergence_events[0..-2].each_slice(2).map {|(x,y)|
     y ? (y.first - x.first) : 0
-  }[1..-1].compact.sum
+  }[1..-1].compact.inject{|sum,i| sum += i }
 end
 total_session_time = sorted_beat_data.select {|x| x[:peers] == 4 }.last[:time_in_seconds] - initialization_time
 convergence_of_total = (100.0 - 100*(total_divergence_time / total_session_time)).round(3)
