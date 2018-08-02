@@ -1,3 +1,5 @@
+require 'set'
+
 def get_node_name(line)
   line.scan(/\/(n\d)/).flatten.first
 end
@@ -35,6 +37,19 @@ def nemesis_regions(data)
       from #{start.first}, graph 0 \
       to   #{stop ? stop.first : start.first + default_duration}, graph 1 \
       fillcolor rgb "#000000" \
+      fillstyle transparent solid 0.05 \
+      noborder
+    }
+  }.join("\n\n")
+end
+
+def divergence_regions(data)
+  data.each_slice(2).map {|start,stop|
+    %Q{
+      set obj rect \
+      from #{start.first}, graph 0 \
+      to   #{stop ? stop.first : start.first + 100}, graph 1 \
+      fillcolor rgb "#ff0000" \
       fillstyle transparent solid 0.05 \
       noborder
     }
@@ -113,6 +128,34 @@ output = data.map {|node| node.map {|line| line.join("\t") }.join("\n") }.join("
 
 nemesis_output = nemesis_events.map {|line| line.join("\t") }.join("\n")
 
+def agreement?(chunk)
+  all_nodes_present = chunk.map {|x| x[:node] }.sort.to_set == ("n1".."n5").to_a.to_set
+  tempos_match = chunk.map {|x| x[:tempo] }.uniq.length == 1
+
+  all_nodes_present && tempos_match
+end
+
+beat_data = tempo_points.map {|k,v| v["values"].map {|x| x.merge(node: k) } }.flatten
+
+sorted_beat_data = beat_data.map {|x|
+  # decorate
+  x.tap {|y|
+    y[:beat] = y[:beat].round(2)
+    y[:tempo] = y[:tempo].round
+    y.merge!({:time_in_seconds => y[:now] - session_beat_origin})
+  }
+}.sort_by {|x|
+  [x[:time_in_seconds], x[:phase]]
+}
+
+all_nodes = ("n1".."n5").to_a.to_set
+
+# different approach
+divergence_events = sorted_beat_data.slice_when {|i,j| i[:time_in_seconds] != j[:time_in_seconds] }.to_a.map {|chunk| [chunk.first[:time_in_seconds], agreement?(chunk)] }.chunk {|x|
+  x.last
+}.map {|x| x.last.first }
+
+
 File.open('test_output.rbdump', 'wb') do |file|
   Marshal.dump(tempo_points, file)
 end
@@ -144,6 +187,8 @@ commands = %Q(
 
   set style rect fc lt -1 fs solid 0.15 noborder
   #{nemesis_regions(nemesis_events)}
+
+  #{divergence_regions(divergence_events)}
 
   set xrange [] writeback
   set xlabel 'Time (seconds)'
