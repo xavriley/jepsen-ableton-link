@@ -111,6 +111,7 @@ session_beat_origin = tempo_points.map {|k,v| v["values"].map{|y| y[:beat_zero] 
 data = tempo_points.map {|k,v| v["values"].map {|x| [x[:now] - session_beat_origin, x[:tempo]]} }
 
 # puts "beat origin: #{session_beat_origin}"
+offset_measurements_raw = offset_measurements
 victorious_session = offset_measurements.sort_by {|h| h[:last_seen_now] }.last[:session_name]
 offset_measurements.reject! {|x| x[:session_name] != victorious_session }
 
@@ -157,7 +158,9 @@ divergence_events = sorted_beat_data.slice_when {|i,j| i[:time_in_seconds] != j[
 
 
 File.open('test_output.rbdump', 'wb') do |file|
-  Marshal.dump(tempo_points, file)
+  Marshal.dump({:tempo_points => tempo_points,
+                :sorted_beat_data => sorted_beat_data,
+                :offset_measurements_raw => offset_measurements}, file)
 end
 
 File.open('plot_data.dat', 'wb') do |file|
