@@ -66,7 +66,7 @@ ARGF.each do |l|
   begin
     case l
     when /nemesis/
-      next if l[/:isolated|healed/]
+      next if l[/:isolated|healed|indeterminate/]
 
       event = parse_edn(l)
       nemesis_start_time ||= event[:time]
