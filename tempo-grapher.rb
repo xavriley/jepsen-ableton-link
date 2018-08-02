@@ -152,10 +152,39 @@ sorted_beat_data = beat_data.map {|x|
 all_nodes = ("n1".."n5").to_a.to_set
 
 # different approach
-divergence_events = sorted_beat_data.slice_when {|i,j| i[:time_in_seconds] != j[:time_in_seconds] }.to_a.map {|chunk| [chunk.first[:time_in_seconds], agreement?(chunk)] }.chunk {|x|
-  x.last
-}.map {|x| x.last.first }
+divergence_events = sorted_beat_data.slice_when {|i,j|
+  i[:time_in_seconds] != j[:time_in_seconds]
+}.to_a.map {|chunk|
+  [chunk.first[:time_in_seconds], chunk.length, chunk.map{|x| x[:tempo] }.to_set, agreement?(chunk)]
+}.slice_when {|a,b|
+  # smooth out cases where tempo is constant
+  # but nodes don't all fire at the same second
+  # ((a.last != b.last) && (a[-3] + b[-3] == 10)) || (a[-2] != b[-2])
+  a.last != b.last
+}.map {|x|
+  x.first
+}
 
+# find the index where we first see all 5 nodes
+initialization_complete = divergence_events.find_index {|x| x[1] == 5 }
+
+# smooth out blips where we don't get 5 consecutive observations but the tempo remains the same
+divergence_events = divergence_events.map.with_index{|x,i| [x,i] }.each_slice(2).reject{|(a,b)|
+  b && b.last > initialization_complete && (a.first[-2] == b.first[-2])
+}.flatten(1).map {|x| x.first }
+
+# drop the initial divergence as nodes join session
+initialization_time = divergence_events.select {|x| x.last }.first.first
+if divergence_events.length.even?
+  total_divergence_time = divergence_events.each_slice(2).map {|(x,y)| y ? (y.first - x.first) : 0 }[1..-1].compact.sum
+else
+  # drop last because we don't converge again after that
+  total_divergence_time = divergence_events[0..-2].each_slice(2).map {|(x,y)|
+    y ? (y.first - x.first) : 0
+  }[1..-1].compact.sum
+end
+total_session_time = sorted_beat_data.select {|x| x[:peers] == 4 }.last[:time_in_seconds] - initialization_time
+convergence_of_total = (100.0 - 100*(total_divergence_time / total_session_time)).round(3)
 
 File.open('test_output.rbdump', 'wb') do |file|
   Marshal.dump({:tempo_points => tempo_points,
@@ -187,6 +216,8 @@ commands = %Q(
   set lmargin 15 # accomodate different width ytics
 
   set multiplot layout 2, 1
+
+  set title "Tempo measuments - convergence #{convergence_of_total}%"
 
   set style rect fc lt -1 fs solid 0.15 noborder
   #{nemesis_regions(nemesis_events)}
