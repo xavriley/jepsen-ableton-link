@@ -1,3 +1,4 @@
+require 'pp'
 require 'set'
 
 def get_node_name(line)
