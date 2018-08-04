@@ -53,6 +53,7 @@
                     (c/exec :gem :install :bundler)
                     (c/exec :bundle :install)
                     (c/exec :rake :compile)
+                    (c/exec :iptables :-Z) ;; reset packet counters
                     (info node "Link installed - starting test")
                     (c/exec (c/lit "bin/server > /link.log 2>&1 &")))))
       ;; allow peer discovery to stabilize
@@ -69,13 +70,10 @@
 
     db/LogFiles
     (log-files [_ test node]
-      [logfile])))
+      [logfile "/iptables.log"])))
 
 (defn r   [_ _] {:type :invoke, :f :read, :value nil})
 (defn w   [_ _] {:type :invoke, :f :write, :value (+ 20 (rand-int 200))})
-
-;; this may not be relevant
-;; (defn cas [_ _] {:type :invoke, :f :cas, :value [(rand-int 5) (rand-int 5)]})
 
 (defrecord Client [conn]
   client/Client
@@ -95,7 +93,12 @@
                      ;; Ableton Link library
                      :value (java.lang.Math/round (read-string (:out (shell/sh "nc" "-q" "1" (name (:node this)) "17001" :in "status")))))
         :write (do (shell/sh "nc" "-q" "1" (name (:node this)) "17001" :in (str "tempo " (:value op)))
-                 (assoc op :type, :ok))))
+                 (assoc op :type, :ok))
+        ;; connect to all nodes in test and ask them to log their packet data
+        :log-packet-data (do (info (:nodes test))
+                             (c/with-test-nodes test
+                               (info (str "\n" (c/su (c/exec (c/lit "iptables -vL > /iptables.log"))) "\n")))
+                             (assoc op :type, :info))))
 
   (teardown! [this test])
 

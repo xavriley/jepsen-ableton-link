@@ -98,6 +98,9 @@ ARGF.each do |l|
       session_name = l.scan(/Session (.{8})/).flatten.first
       offset = l.scan(/\(1, -(\d+)+\)/).flatten.first.to_f
       offset_measurements << {node: node, session_name: session_name, offset: offset, last_seen_now: last_seen_now}
+    when /ACCEPT/
+      # TODO - write iptables rules to help monitor UDP traffic between nodes, without control node
+      # pp l
     else
       # ignore
       # puts l
