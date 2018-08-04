@@ -1,3 +1,4 @@
+require 'base64'
 require 'pp'
 require 'set'
 
@@ -57,6 +58,35 @@ def divergence_regions(data)
   }.join("\n\n")
 end
 
+def plot_session_measurements(data)
+  datablocks = []
+  plots = []
+
+  data.group_by {|x|
+    x[:session_name]
+  }.each do |session, measurements|
+    temp_name = Base64.encode64(session).gsub(/[\s|=]+/, '').downcase
+    data = measurements.map {|x|
+        x.slice(:time_in_seconds, :offset_scaled, :node).values.join("\t")
+      }.join("\n")
+
+    datablocks << %Q{
+$data_#{temp_name} << #{temp_name.upcase}
+#{data}
+#{temp_name.upcase}
+    }
+
+    plots << %Q{"$data_#{temp_name}" using 1:2 ti "session: #{session.gsub(/[^A-Za-z0-9]+/, "-")}" with linespoints, \\
+                    '' using 1:2:3 ti "" with labels offset 1, char 1}
+  end
+
+  %Q{
+#{datablocks.join("\n\n")}
+
+  plot #{plots.join(", \\\n")}
+  }
+end
+
 nemesis_start_time = nil
 tempo_points = {}
 offset_measurements = []
@@ -114,20 +144,12 @@ end
 session_beat_origin = tempo_points.map {|k,v| v["values"].map{|y| y[:beat_zero] }.first }.sort.first
 data = tempo_points.map {|k,v| v["values"].map {|x| [x[:now] - session_beat_origin, x[:tempo]]} }
 
-# puts "beat origin: #{session_beat_origin}"
-offset_measurements_raw = offset_measurements
-victorious_session = offset_measurements.sort_by {|h| h[:last_seen_now] }.last[:session_name]
-offset_measurements.reject! {|x| x[:session_name] != victorious_session }
-
-# debug - output session name as well
-# offset_measurements.map! {|x| ["\"#{x[:node]} #{x[:session_name]}\"", x[:last_seen_now] - session_beat_origin, ((x[:offset] * 1e-6) - session_beat_origin).round(6)]}
-offset_measurements.map! {|x| [x[:node], x[:last_seen_now] - session_beat_origin, ((x[:offset] * 1e-6) - session_beat_origin).round(6)]}
-
-# WIP plotting clock offset measurements using y2 axis
-# would be nice to get labels with node names
-# setting y1 to be 0..250 would make for an easier scaling factor of 1000ms
-# maybe need to make it dynamic based on range of offsets
-offset_output = offset_measurements.group_by {|x| x.first }.map {|k,v| (["# #{k}"] << v.map {|x| (x.flatten[1..2] << k).join("\t") }).join("\n") }.join("\n\n\n")
+offset_measurements = offset_measurements.map {|x|
+  x.merge!({
+    :time_in_seconds => x[:last_seen_now] - session_beat_origin,
+    :offset_scaled => ((x[:offset] * 1e-6) - session_beat_origin).round(6),
+  })
+}
 
 output = data.map {|node| node.map {|line| line.join("\t") }.join("\n") }.join("\n\n\n")
 
@@ -206,10 +228,6 @@ File.open('plot_data.dat', 'wb') do |file|
   IO.write(file, output)
 end
 
-File.open('offset_data.dat', 'wb') do |file|
-  IO.write(file, offset_output)
-end
-
 File.open('nemesis_data.dat', 'wb') do |file|
   IO.write(file, nemesis_output)
 end
@@ -227,7 +245,7 @@ commands = %Q(
 
   set multiplot layout 2, 1
 
-  set title "Tempo measuments - convergence #{convergence_of_total}%"
+  set title "Tempo measurements - convergence #{convergence_of_total}%"
 
   set style rect fc lt -1 fs solid 0.15 noborder
   #{nemesis_regions(nemesis_events)}
@@ -268,17 +286,22 @@ commands = %Q(
      ''                index 4 title 'n5' with linespoints linestyle 13
 
   #
-  set title "Clock offsets"
+  set title "Clock offsets per Link session"
 
-  unset key
+  set key
   set xrange restore
   set ytics
+  set logscale y
+  # set format y "10^{%L}
   unset yrange
-  set ylabel "Clock offset (seconds)"
-  plot 'offset_data.dat' using 1:2 ti 'offset_data.dat', \
-                      '' using 1:2:3 with labels offset 0, char 1
+  set ylabel "Clock offset - log(seconds)"
+  #{plot_session_measurements(offset_measurements)}
 
   unset multiplot
 )
+
+File.open('gnuplot_commands.gnu', 'wb') do |file|
+  IO.write(file, commands)
+end
 
 gnuplot(commands)
