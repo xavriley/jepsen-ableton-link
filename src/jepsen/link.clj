@@ -16,6 +16,8 @@
             [jepsen.os.debian :as debian]
             [knossos.model :as model]))
 
+(declare cli-opts)
+
 ;; constants
 (def logfile (str "/link.log"))
 
@@ -60,8 +62,10 @@
       (c/su
         ;; exit gracefully from the process to avoid failing the test
         (c/exec (c/lit "echo 'quit' | nc localhost 17001"))
-        (c/exec (c/lit "rm -rf /ruby_ableton_link")))
-      (info node "tearing down link"))
+        (cond {:no-teardown cli-opts} (info node "NOT tearing down link")
+              :else (do
+                      (c/exec (c/lit "rm -rf /ruby_ableton_link"))
+                      (info node "tearing down link")))))
 
     db/LogFiles
     (log-files [_ test node]
@@ -139,25 +143,37 @@
                       :linear (checker/linearizable)
                       :timeline (timeline/html)})
           :nemesis (slowing (nemesis/partition-majorities-ring)
-                            0.5) ;; slow packets - works out as 2x this value because of round trips
-          :generator (->>
-                          (gen/seq
-                            (cycle [(gen/once {:type :invoke, :f :write, :value 120})
-                                    (gen/mix [r w])]))
-                          (gen/delay 2)
-                          (gen/singlethreaded)
-                          (gen/nemesis (gen/seq (cycle
-                                                  [(gen/sleep 5)
-                                                   {:type :info, :f :start}
-                                                   (gen/sleep 5)
-                                                   {:type :info, :f :stop}])))
-                          (gen/time-limit (:time-limit opts)))}))
+                            0.1) ;; slow packets - works out as 2x this value because of round trips
+          :generator (gen/phases (->>
+                                   (gen/seq
+                                     (cycle [(gen/once {:type :invoke, :f :write, :value 120})
+                                             (gen/mix [r w])]))
+                                   (gen/delay (:delay opts))
+                                   (gen/singlethreaded)
+                                   (gen/nemesis (gen/seq (cycle
+                                                           [(gen/sleep (:nemesis-duration opts))
+                                                            {:type :info, :f :start}
+                                                            (gen/sleep (:nemesis-duration opts))
+                                                            {:type :info, :f :stop}])))
+                                   (gen/time-limit (:time-limit opts)))
+                                 (gen/barrier (gen/once {:type :info, :f :log-packet-data}))
+                                 (gen/sleep 5))}))
+
+(def cli-opts
+  "Additional command line options."
+    [["-d" "--delay SECS" "Delay between read/write operations."
+      :default 2]
+     [nil "--nemesis-duration SECS" "Length of the window between nemesis start/stop"
+      :default 5]
+     [nil "--no-teardown" "Don't remove build of gem in teardown"]])
 
 (defn -main
   "Handles command line arguments. Can either run a test, or a web server for
   browsing results."
   [& args]
   (do (shell/sh "apt-get" "install" "-qy" "netcat") ;; bit of a hack as we shell out to nc on the control node
-      (cli/run! (merge (cli/single-test-cmd {:test-fn link-test})
-                       (cli/serve-cmd))
-                args)))
+      (cli/run! (cli/single-test-cmd {:test-fn link-test
+                                      :opt-spec cli-opts})
+                args)
+      ;; run custom reporting from Ruby script
+      (shell/sh "grep -Hn '^' store/latest/{history.edn,n*/link.log} | ruby tempo-grapher.rb")))
