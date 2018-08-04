@@ -67,7 +67,7 @@ def plot_session_measurements(data)
   }.each do |session, measurements|
     temp_name = Base64.encode64(session).gsub(/[\s|=]+/, '').downcase
     data = measurements.map {|x|
-        x.slice(:time_in_seconds, :offset_scaled, :node).values.join("\t")
+        x.values_at(:time_in_seconds, :offset_scaled, :node).join("\t")
       }.join("\n")
 
     datablocks << %Q{
