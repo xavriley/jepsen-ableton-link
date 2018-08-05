@@ -130,6 +130,21 @@
       (net/fast! (:net test) test)
       (nemesis/teardown! nem test))))
 
+(defn line-grudge
+  "A grudge where every connection is a bridge"
+  [nodes]
+  (->> (set nodes)
+       shuffle
+       (partition 2 1) ;; outputs [[n1 n2], [n2 n3] ...]
+       (take (count nodes))
+       (map (fn [pair] [(first pair) #{(last pair)}]))
+       (into {})))
+
+(defn partition-line
+  "Partition nodes so that every connection is a bridge"
+  []
+  (nemesis/partitioner line-grudge))
+
 (defn link-test
   "Given an options map from the command line runner (e.g. :nodes, :ssh,
   :concurrency, ...) constructs a test map"
@@ -145,8 +160,9 @@
                      {:perf (checker/perf)
                       :linear (checker/linearizable)
                       :timeline (timeline/html)})
-          :nemesis (slowing (nemesis/partition-majorities-ring)
-                            0.1) ;; slow packets - works out as 2x this value because of round trips
+          :nemesis (partition-line)
+          ;; :nemesis ;; (slowing (nemesis/partition-majorities-ring)
+                      ;;         0.1) ;; slow packets - works out as 2x this value because of round trips
           :generator (gen/phases (->>
                                    (gen/seq
                                      (cycle [(gen/once {:type :invoke, :f :write, :value 120})
