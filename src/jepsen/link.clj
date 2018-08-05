@@ -176,7 +176,7 @@
           :generator (gen/phases (->>
                                    (gen/seq
                                      (cycle [(gen/once {:type :invoke, :f :write, :value 120})
-                                             (gen/mix [r w])]))
+                                             (gen/seq (cycle [r w w]))]))
                                    (gen/delay (:delay opts))
                                    (gen/singlethreaded)
                                    (gen/nemesis (gen/seq (cycle
