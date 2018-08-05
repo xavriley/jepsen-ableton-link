@@ -145,6 +145,16 @@
   []
   (nemesis/partitioner line-grudge))
 
+(defn choose-nemesis
+  "Choose nemesis based on command line options"
+  [opts]
+  ;; TODO rewrite slowing and compose with these options
+  (case (:topology opts)
+        "line" (partition-line)
+        "ring" (nemesis/partition-majorities-ring)
+        "bridge" (nemesis/partitioner nemesis/bridge)
+        "connected" nemesis/noop))
+
 (defn link-test
   "Given an options map from the command line runner (e.g. :nodes, :ssh,
   :concurrency, ...) constructs a test map"
@@ -160,7 +170,7 @@
                      {:perf (checker/perf)
                       :linear (checker/linearizable)
                       :timeline (timeline/html)})
-          :nemesis (partition-line)
+          :nemesis (choose-nemesis opts)
           ;; :nemesis ;; (slowing (nemesis/partition-majorities-ring)
                       ;;         0.1) ;; slow packets - works out as 2x this value because of round trips
           :generator (gen/phases (->>
@@ -184,6 +194,8 @@
       :default 2]
      [nil "--nemesis-duration SECS" "Length of the window between nemesis start/stop"
       :default 5]
+     ["-t" "--topology TOPOLOGY" "Topology of partition for nemesis"
+      :default "connected"]
      [nil "--no-teardown" "Don't remove build of gem in teardown"]])
 
 (defn -main
