@@ -65,7 +65,7 @@ def plot_session_measurements(data)
   data.group_by {|x|
     x[:session_name]
   }.each do |session, measurements|
-    temp_name = Base64.encode64(session).gsub(/[\s|=]+/, '').downcase
+    temp_name = Base64.encode64(session).gsub(/[^A-Za-z0-9]+/, '_').downcase
     data = measurements.map {|x|
         x.values_at(:time_in_seconds, :offset_scaled, :node).join("\t")
       }.join("\n")
