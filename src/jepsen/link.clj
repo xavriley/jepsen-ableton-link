@@ -150,12 +150,19 @@
 (defn choose-nemesis
   "Choose nemesis based on command line options"
   [opts]
-  ;; TODO rewrite slowing and compose with these options
-  (case (:topology opts)
-        "line" (partition-line)
-        "ring" (nemesis/partition-majorities-ring)
-        "bridge" (nemesis/partitioner nemesis/bridge)
-        "connected" nemesis/noop))
+  (let [partition-fn (case (:topology opts)
+                       "line" (partition-line)
+                       "ring" (nemesis/partition-majorities-ring)
+                       "bridge" (nemesis/partitioner nemesis/bridge)
+                       "connected" nemesis/noop)
+        bandwidth-fn (if (:network-delay opts)
+                       #(slowing %1 (:network-delay opts))
+                       ;; else
+                       nil)]
+    (if bandwidth-fn
+      (bandwidth-fn partition-fn)
+      ;; else
+      partition-fn)))
 
 (defn link-test
   "Given an options map from the command line runner (e.g. :nodes, :ssh,
@@ -198,6 +205,8 @@
       :default 5]
      ["-t" "--topology TOPOLOGY" "Topology of partition for nemesis"
       :default "connected"]
+     [nil "--network-delay SECS" "Delay to introduce to packets between nodes"
+      :parse-fn read-string]
      [nil "--no-teardown" "Don't remove build of gem in teardown"]])
 
 (defn -main
