@@ -193,7 +193,12 @@
                                                             {:type :info, :f :start}
                                                             (gen/sleep (:nemesis-duration opts))
                                                             {:type :info, :f :stop}])))
-                                   (gen/time-limit (:time-limit opts)))
+                                   ;; Time limit feels like a more intuitive way to test
+                                   ;; rather than using the concept of the number of operations
+                                   ;; The following gives a compromise - an exact number of operations
+                                   ;; (for consistent test results) but with a notion of how long these
+                                   ;; will take
+                                   (gen/limit (/ (:time-limit opts) (:delay opts))))
                                  (gen/barrier (gen/once {:type :info, :f :log-packet-data}))
                                  (gen/sleep 5))}))
 
