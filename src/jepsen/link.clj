@@ -117,10 +117,12 @@
 
     (invoke! [this test op]
       (case (:f op)
-        :start (do (net/slow! (:net test) test {:mean (* dt 1000) :variance 1})
+        :start (do (info "slowing down network by " dt " seconds")
+                   (net/slow! (:net test) test {:mean (* dt 1000) :variance 1})
                    (nemesis/invoke! nem test op))
 
-        :stop (try (nemesis/invoke! nem test op)
+        :stop (try (do (info "removing artificial network delay")
+                       (nemesis/invoke! nem test op))
                    (finally
                      (net/fast! (:net test) test)))
 
