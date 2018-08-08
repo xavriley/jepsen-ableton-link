@@ -63,7 +63,7 @@
       (c/su
         ;; exit gracefully from the process to avoid failing the test
         (c/exec (c/lit "echo 'quit' | nc localhost 17001"))
-        (cond {:no-teardown cli-opts} (info node "NOT tearing down link")
+        (cond (:no-teardown cli-opts) (info node "NOT tearing down link")
               :else (do
                       (c/exec (c/lit "rm -rf /ruby_ableton_link"))
                       (info node "tearing down link")))))
