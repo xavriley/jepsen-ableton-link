@@ -185,7 +185,7 @@
                       :linear (checker/linearizable)
                       :timeline (timeline/html)})
           :nemesis (choose-nemesis opts)
-          :generator (gen/phases (gen/barrier (gen/once {:type :info, :f :setup-packet-logging}))
+          :generator (gen/phases (gen/on #{1} (gen/once {:type :info, :f :setup-packet-logging}))
                                  (->>
                                    (gen/seq
                                      (cycle [(gen/once {:type :invoke, :f :write, :value 120})
