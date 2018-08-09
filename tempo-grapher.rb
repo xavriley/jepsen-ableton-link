@@ -172,6 +172,7 @@ def agreement?(chunk)
   all_nodes_present && tempos_match
 end
 
+# now that all the data is gathered, create a flat representation of the data
 beat_data = tempo_points.map {|k,v| v["values"].map {|x| x.merge(node: k) } }.flatten
 
 sorted_beat_data = beat_data.map {|x|
