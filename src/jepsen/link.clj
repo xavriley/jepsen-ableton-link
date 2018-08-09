@@ -44,6 +44,7 @@
                 (info "Cloning https://github.com/xavriley/ruby_ableton_link.git")
                 (c/exec :git :clone "https://github.com/xavriley/ruby_ableton_link.git"))
               (c/cd "/ruby_ableton_link"
+                    (c/exec :git :pull :origin :master)
                     (c/exec :git :submodule :update :--init :--recursive)
                     ;; enable debugging log in Link library
                     (c/cd "ext/ableton_link/link"
