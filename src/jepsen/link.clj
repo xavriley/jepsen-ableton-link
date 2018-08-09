@@ -12,6 +12,7 @@
                     [net :as net]
                     [tests :as tests]]
             [jepsen.checker.timeline :as timeline]
+            [jepsen.control.net :as cn]
             [jepsen.control.util :as cu]
             [jepsen.os.debian :as debian]
             [knossos.model :as model]))
@@ -94,10 +95,16 @@
                      :value (java.lang.Math/round (read-string (:out (shell/sh "nc" "-q" "1" (name (:node this)) "17001" :in "status")))))
         :write (do (shell/sh "nc" "-q" "1" (name (:node this)) "17001" :in (str "tempo " (:value op)))
                  (assoc op :type, :ok))
+        ;; connect to all nodes and add a rule so that udp traffic is counted by iptables
+        :setup-packet-logging (do (c/with-test-nodes test
+                                    (doseq [hostname ["n1" "n2" "n3" "n4" "n5"]]
+                                      (info (cn/ip hostname))
+                                      (c/su (c/exec (c/lit (str "iptables -I INPUT -p udp -s " (cn/ip hostname) " -m comment --comment \"Logging UDP from " (cn/ip hostname) "\""))))
+                                      (c/su (c/exec (c/lit (str "iptables -I OUTPUT -p udp -m comment --comment \"Logging outgoing UDP\""))))))
+                                  (assoc op :type, :info))
         ;; connect to all nodes in test and ask them to log their packet data
-        :log-packet-data (do (info (:nodes test))
-                             (c/with-test-nodes test
-                               (info (str "\n" (c/su (c/exec (c/lit "iptables -vL > /iptables.log"))) "\n")))
+        :log-packet-data (do (c/with-test-nodes test
+                               (c/su (c/exec (c/lit "iptables -vL > /iptables.log"))))
                              (assoc op :type, :info))))
 
   (teardown! [this test])
@@ -180,9 +187,8 @@
                       :linear (checker/linearizable)
                       :timeline (timeline/html)})
           :nemesis (choose-nemesis opts)
-          ;; :nemesis ;; (slowing (nemesis/partition-majorities-ring)
-                      ;;         0.1) ;; slow packets - works out as 2x this value because of round trips
-          :generator (gen/phases (->>
+          :generator (gen/phases (gen/barrier (gen/once {:type :info, :f :setup-packet-logging}))
+                                 (->>
                                    (gen/seq
                                      (cycle [(gen/once {:type :invoke, :f :write, :value 120})
                                              (gen/seq (cycle [r w w]))]))
