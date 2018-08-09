@@ -23,7 +23,7 @@
 
 (defn db
   "Sets up Ableton Link instances"
-  [version]
+  [version opts]
   (reify db/DB
     (setup! [_ test node]
       (c/su
@@ -63,7 +63,7 @@
       (c/su
         ;; exit gracefully from the process to avoid failing the test
         (c/exec (c/lit "echo 'quit' | nc localhost 17001"))
-        (cond (:no-teardown cli-opts) (info node "NOT tearing down link")
+        (cond (:no-teardown opts) (info node "NOT tearing down link")
               :else (do
                       (c/exec (c/lit "rm -rf /ruby_ableton_link"))
                       (info node "tearing down link")))))
@@ -172,7 +172,7 @@
          opts
          {:name "link"
           :os debian/os
-          :db (db "0.0.1")
+          :db (db "0.0.1" opts)
           :client (Client. nil)
           :model (model/register)
           :checker (checker/compose
