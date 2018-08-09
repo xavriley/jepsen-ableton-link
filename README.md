@@ -18,18 +18,18 @@ export JEPSEN_ROOT="/path/to/jepsen.link"
 
 # in another window
 docker exec -it jepsen-control bash
-lein run test
-cat store/latest/*/link.log
+lein run test --time-limit 180 --no-teardown --topology line --network-delay 0.5
 ```
 
-These tests don't currently do alot - they install the ruby_ableton_link gem on
-the nodes and start a session before outputting their status for 100 beats.
+Once that has completed, run
 
-More rigorous testing and nicer output is under development.
+```
+grep -Hn '^' store/latest/{jepsen.log,history.edn,n*/link.log,n*/iptables.log} | ruby tempo-grapher.rb && open plot.pdf
+```
 
-## example plotting tempo values and clock offsets
+To generate the graphs.
 
-![](example_plot.png)
+See ![the plot.pdf files in figures_for_publication](figures_for_publication/connected_no_delay/plot.pdf) for examples of the output.
 
 ## License
 
