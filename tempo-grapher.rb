@@ -109,7 +109,7 @@ ARGF.each.with_index do |l, idx|
     when /:topology/
       title_params << l.match(/(:topology "\w+")/).captures.first
     when /:network-delay/
-      title_params << l.match(/(:network-delay "\w+")/).captures.first
+      title_params << l.match(/(:network-delay [\d\.]+),/).captures.first
     when /:nemesis,/
       next if l[/:isolated|healed|indeterminate/]
 
@@ -146,11 +146,11 @@ ARGF.each.with_index do |l, idx|
       offset = l.scan(/\(1, -(\d+)+\)/).flatten.first.to_f
       offset_measurements << {node: node, session_name: session_name, offset: offset, last_seen_now: last_seen_now}
     when /docker_default/
-      # TODO - write iptables rules to help monitor UDP traffic between nodes, without control node
-      #    64  8640            udp  --  any    any     jepsen-n5.docker_default  anywhere             /* Logging UDP from 172.18.0.2 */
-      node = get_node_name(l)
-      pkts,bytes,fromnode = l.strip.match(/(\d+)  ([\dKM]+)            udp  --  any    any     jepsen-(n\d)/).captures
-      packet_stats << {node: node, pkts: pkts.to_i, bytes: bytes, fromnode: fromnode}
+      if l[/udp/]
+        node = get_node_name(l)
+        pkts,bytes,fromnode = l.strip.match(/(\d+)  ([\dKM]+)            udp  --  any    any     jepsen-(n\d)/).captures
+        packet_stats << {node: node, pkts: pkts.to_i, bytes: bytes, fromnode: fromnode}
+      end
     else
       # ignore
       # puts l
