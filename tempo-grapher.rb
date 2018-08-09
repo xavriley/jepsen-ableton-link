@@ -93,8 +93,9 @@ packet_stats = []
 offset_measurements = []
 nemesis_events = []
 last_seen_now = 0.0
+last_line = ""
 
-ARGF.each do |l|
+ARGF.each.with_index do |l, idx|
   begin
     case l
     when /nemesis/
@@ -126,7 +127,10 @@ ARGF.each do |l|
       #
       # session leader doesn't measure against itself, obviously
       node = get_node_name(l)
-      session_name = l.scan(/Session (.{8})/).flatten.first
+      session_name = l.scan(/Session (.{8})/).flatten.compact.first
+      if session_name.nil?
+        session_name = last_line.scan(/Session (.{8})/).flatten.compact.first
+      end
       offset = l.scan(/\(1, -(\d+)+\)/).flatten.first.to_f
       offset_measurements << {node: node, session_name: session_name, offset: offset, last_seen_now: last_seen_now}
     when /docker_default/
@@ -143,6 +147,8 @@ ARGF.each do |l|
     puts l
     puts e
   end
+
+  last_line = l
 end
 
 session_beat_origin = tempo_points.map {|k,v| v["values"].map{|y| y[:beat_zero] }.first }.sort.first
