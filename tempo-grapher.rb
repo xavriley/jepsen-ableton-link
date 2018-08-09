@@ -89,6 +89,7 @@ end
 
 nemesis_start_time = nil
 tempo_points = {}
+packet_stats = []
 offset_measurements = []
 nemesis_events = []
 last_seen_now = 0.0
@@ -128,9 +129,12 @@ ARGF.each do |l|
       session_name = l.scan(/Session (.{8})/).flatten.first
       offset = l.scan(/\(1, -(\d+)+\)/).flatten.first.to_f
       offset_measurements << {node: node, session_name: session_name, offset: offset, last_seen_now: last_seen_now}
-    when /ACCEPT/
+    when /docker_default/
       # TODO - write iptables rules to help monitor UDP traffic between nodes, without control node
-      # pp l
+      #    64  8640            udp  --  any    any     jepsen-n5.docker_default  anywhere             /* Logging UDP from 172.18.0.2 */
+      node = get_node_name(l)
+      pkts,bytes,fromnode = l.strip.match(/(\d+)  ([\dKM]+)            udp  --  any    any     jepsen-(n\d)/).captures
+      packet_stats << {node: node, pkts: pkts.to_i, bytes: bytes, fromnode: fromnode}
     else
       # ignore
       # puts l
@@ -174,6 +178,20 @@ sorted_beat_data = beat_data.map {|x|
 }.sort_by {|x|
   [x[:time_in_seconds], x[:phase]]
 }
+
+sorted_packet_stats = packet_stats.sort_by {|x|
+  [x[:fromnode], x[:node]]
+}
+packet_output = sorted_packet_stats.group_by {|x|
+  x[:fromnode]
+}.map {|(fromnode, values)|
+  values << {node: fromnode, pkts: "-", bytes: "-", fromnode: fromnode}
+  values.sort_by {|v|
+    v[:node]
+  }.map {|x|
+    "\"#{x[:pkts]}/#{x[:bytes]}\""
+  }.join("\t")
+}.join("\n")
 
 all_nodes = ("n1".."n5").to_a.to_set
 
@@ -298,6 +316,20 @@ commands = %Q(
   #{plot_session_measurements(offset_measurements)}
 
   unset multiplot
+)
+
+# TODO: work out plotting of packet statistics (if any)
+%Q(
+set autoscale fix
+set tics scale 1
+unset cbtics
+unset key
+
+$packet_data << PKT
+#{packet_output}
+PKT
+
+plot '$packet_data' matrix using 1:2:($3) with labels font ',16'
 )
 
 File.open('gnuplot_commands.gnu', 'wb') do |file|
