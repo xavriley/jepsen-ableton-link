@@ -62,13 +62,20 @@ def plot_session_measurements(data)
   datablocks = []
   plots = []
 
-  data.group_by {|x|
+  victorious_session = data.group_by {|x|
     x[:session_name]
-  }.each do |session, measurements|
+  }.sort_by {|session, measurements|
+    measurements.length
+  }.reverse.first
+
+  [victorious_session].each do |session, measurements|
     temp_name = Base64.encode64(session).gsub(/[^A-Za-z0-9]+/, '_').downcase
-    data = measurements.map {|x|
-        x.values_at(:time_in_seconds, :offset_scaled, :node).join("\t")
-      }.join("\n")
+    data = measurements.group_by {|x| x[:node] }.map {|(node, m)|
+        # group measurements by node so that they plot with a line between each one
+        m.map {|x|
+          x.values_at(:time_in_seconds, :offset_scaled, :node).join("\t")
+        }.join("\n")
+      }.join("\n\n")
 
     datablocks << %Q{
 $data_#{temp_name} << #{temp_name.upcase}
@@ -322,10 +329,10 @@ commands = %Q(
   set key
   set xrange restore
   set ytics
-  set logscale y
+  # set logscale y
   # set format y "10^{%L}
   unset yrange
-  set ylabel "Clock offset - log(seconds)"
+  set ylabel "Clock offset - seconds"
   #{plot_session_measurements(offset_measurements)}
 
   unset multiplot
