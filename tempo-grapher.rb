@@ -257,13 +257,19 @@ File.open('nemesis_data.dat', 'wb') do |file|
   IO.write(file, nemesis_output)
 end
 
+File.open('packet_stats.tsv', 'wb') do |file|
+  IO.write(file, packet_output)
+end
+
 def gnuplot(commands)
   IO.popen("gnuplot", "w") { |io| io.puts commands }
 end
 
 commands = %Q(
-  set terminal pngcairo enhanced font "Helvetica,12.0" size 6400,800;
-  set output "plot.png"
+  # set terminal pngcairo enhanced font "Helvetica,12.0" size 6400,800;
+  # set output "plot.png"
+  set terminal pdf size 29.7cm,21cm enhanced color font 'Helvetica'
+  set output "plot.pdf"
 
   set autoscale x
   set lmargin 15 # accomodate different width ytics
@@ -287,21 +293,21 @@ commands = %Q(
   # Set linestyle 1 to blue (#0060ad)
   set style line 1 \
       linecolor rgb '#0060ad' \
-      linetype 1 linewidth 2.5 \
-      pointtype 7 pointsize 2.5
+      linetype 1 linewidth 0.5 \
+      pointtype 7 pointsize 0.5
 
-  set style line 2  lc rgb '#0025ad' lt 1 lw 2.5 pt 2 ps 2.5# --- blue
-  set style line 3  lc rgb '#0042ad' lt 1 lw 2.5 pt 3 ps 2.5#      .
-  set style line 4  lc rgb '#0060ad' lt 1 lw 2.5 pt 4 ps 2.5#      .
-  set style line 5  lc rgb '#007cad' lt 1 lw 2.5 pt 5 ps 2.5#      .
-  set style line 6  lc rgb '#0099ad' lt 1 lw 2.5 pt 6 ps 2.5#      .
-  set style line 7  lc rgb '#00ada4' lt 1 lw 2.5 pt 7 ps 2.5#      .
-  set style line 8  lc rgb '#00ad88' lt 1 lw 2.5 pt 8 ps 2.5#      .
-  set style line 9  lc rgb '#00ad6b' lt 1 lw 2.5 pt 9 ps 2.5#      .
-  set style line 10 lc rgb '#00ad4e' lt 1 lw 2.5 pt 10 ps 2.5#      .
-  set style line 11 lc rgb '#00ad31' lt 1 lw 2.5 pt 11 ps 2.5#      .
-  set style line 12 lc rgb '#00ad14' lt 1 lw 2.5 pt 12 ps 2.5#      .
-  set style line 13 lc rgb '#09ad00' lt 1 lw 2.5 pt 13 ps 2.5# --- green
+  set style line 2  lc rgb '#0025ad' lt 1 lw 0.5 pt 2 ps 0.5# --- blue
+  set style line 3  lc rgb '#0042ad' lt 1 lw 0.5 pt 3 ps 0.5#      .
+  set style line 4  lc rgb '#0060ad' lt 1 lw 0.5 pt 4 ps 0.5#      .
+  set style line 5  lc rgb '#007cad' lt 1 lw 0.5 pt 5 ps 0.5#      .
+  set style line 6  lc rgb '#0099ad' lt 1 lw 0.5 pt 6 ps 0.5#      .
+  set style line 7  lc rgb '#00ada4' lt 1 lw 0.5 pt 7 ps 0.5#      .
+  set style line 8  lc rgb '#00ad88' lt 1 lw 0.5 pt 8 ps 0.5#      .
+  set style line 9  lc rgb '#00ad6b' lt 1 lw 0.5 pt 9 ps 0.5#      .
+  set style line 10 lc rgb '#00ad4e' lt 1 lw 0.5 pt 10 ps 0.5#      .
+  set style line 11 lc rgb '#00ad31' lt 1 lw 0.5 pt 11 ps 0.5#      .
+  set style line 12 lc rgb '#00ad14' lt 1 lw 0.5 pt 12 ps 0.5#      .
+  set style line 13 lc rgb '#09ad00' lt 1 lw 0.5 pt 13 ps 0.5# --- green
 
   # plot for [n=1:5] 'plot_data.dat' with lines linestyle n
   plot 'plot_data.dat' index 0 title 'n1' with linespoints linestyle 1, \
