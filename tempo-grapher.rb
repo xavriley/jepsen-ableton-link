@@ -94,6 +94,7 @@ $data_#{temp_name} << #{temp_name.upcase}
   }
 end
 
+title_params = []
 nemesis_start_time = nil
 tempo_points = {}
 packet_stats = []
@@ -105,7 +106,11 @@ last_line = ""
 ARGF.each.with_index do |l, idx|
   begin
     case l
-    when /nemesis/
+    when /:topology/
+      title_params << l.match(/(:topology "\w+")/).captures.first
+    when /:network-delay/
+      title_params << l.match(/(:network-delay "\w+")/).captures.first
+    when /:nemesis,/
       next if l[/:isolated|healed|indeterminate/]
 
       event = parse_edn(l)
@@ -272,6 +277,9 @@ def gnuplot(commands)
   IO.popen("gnuplot", "w") { |io| io.puts commands }
 end
 
+title_params.unshift "convergence #{convergence_of_total}%"
+title_params.unshift "Tempo measurements"
+
 commands = %Q(
   # set terminal pngcairo enhanced font "Helvetica,12.0" size 6400,800;
   # set output "plot.png"
@@ -283,7 +291,7 @@ commands = %Q(
 
   set multiplot layout 2, 1
 
-  set title "Tempo measurements - convergence #{convergence_of_total}%"
+  set title "#{title_params.join(" - ").gsub('"', '')}"
 
   set style rect fc lt -1 fs solid 0.15 noborder
   #{nemesis_regions(nemesis_events)}
