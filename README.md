@@ -1,4 +1,4 @@
-# WIP jepsen.link
+# jepsen.link
 
 Implementing Jepsen testing for the Ableton Link protocol
 
@@ -29,7 +29,7 @@ grep -Hn '^' store/latest/{jepsen.log,history.edn,n*/link.log,n*/iptables.log} |
 
 To generate the graphs.
 
-See ![the plot.pdf files in figures_for_publication](figures_for_publication/connected_no_delay/plot.pdf) for examples of the output.
+See [the plot.pdf files in figures_for_publication](figures_for_publication/connected_no_delay/plot.pdf) for examples of the output.
 
 ## License
 
