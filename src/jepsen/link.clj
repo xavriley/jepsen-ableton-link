@@ -39,9 +39,6 @@
                          :libglib2.0-dev
                          :wget])
         (info "Installing packages (this takes several minutes)")
-        ;; (c/exec (c/lit "wget -O toxiproxy-2.1.3.deb https://github.com/Shopify/toxiproxy/releases/download/v2.1.3/toxiproxy_2.1.3_amd64.deb"))
-        ;; (c/exec (c/lit "dpkg -i toxiproxy-2.1.3.deb"))
-        ;; (c/exec (c/lit "service toxiproxy start"))
         (c/cd "/"
               (when-not (cu/exists? "ruby_ableton_link")
                 (info "Cloning https://github.com/xavriley/ruby_ableton_link.git")
