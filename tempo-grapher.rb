@@ -214,9 +214,8 @@ packet_output = sorted_packet_stats.group_by {|x|
 
 all_nodes = ("n1".."n5").to_a.to_set
 
-# different approach
 divergence_events = sorted_beat_data.slice_when {|i,j|
-  i[:time_in_seconds] != j[:time_in_seconds]
+  i[:time_in_seconds].floor(1) != j[:time_in_seconds].floor(1)
 }.to_a.map {|chunk|
   [chunk.first[:time_in_seconds], chunk.length, chunk.map{|x| x[:tempo] }.to_set, agreement?(chunk)]
 }.slice_when {|a,b|
