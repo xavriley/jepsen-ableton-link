@@ -1,9 +1,10 @@
 require 'base64'
+require 'date'
 require 'pp'
 require 'set'
 
 def get_node_name(line)
-  line.scan(/\/(n\d)/).flatten.first
+  line.scan(/(n\d)/).flatten.first
 end
 
 def parse_edn(line)
@@ -99,6 +100,8 @@ nemesis_start_time = nil
 tempo_points = {}
 packet_stats = []
 offset_measurements = []
+node_boot_times = []
+nemesis_booted_at = nil
 nemesis_events = []
 last_seen_now = 0.0
 last_line = ""
@@ -145,6 +148,10 @@ ARGF.each.with_index do |l, idx|
       end
       offset = l.scan(/\(1, -(\d+)+\)/).flatten.first.to_f
       offset_measurements << {node: node, session_name: session_name, offset: offset, last_seen_now: last_seen_now}
+    when /Starting nemesis/
+      nemesis_booted_at ||= DateTime.parse(l[/\d\d\d\d-\d\d-\d\d (\d\d:\d\d:\d\d,\d\d\d)/]).to_time.to_i
+    when /starting test/
+      node_boot_times << [get_node_name(l), DateTime.parse(l[/\d\d\d\d-\d\d-\d\d (\d\d:\d\d:\d\d,\d\d\d)/]).to_time.to_i]
     when /docker_default/
       if l[/udp/]
         node = get_node_name(l)
@@ -175,7 +182,24 @@ offset_measurements = offset_measurements.map {|x|
 
 output = data.map {|node| node.map {|line| line.join("\t") }.join("\n") }.join("\n\n\n")
 
-nemesis_output = nemesis_events.map {|line| line.join("\t") }.join("\n")
+# Running multiple nemeses triggers multiple :start/:stop lines
+# Here we take the first :start and the last :stop from each group
+nemesis_events = nemesis_events.chunk {|x| x[:f] }.map {|x| x.first == :start ? x.last.first : x.last.last }
+
+# These only being from when Jepsen has all nodes marked ready, whereas our
+# measurements begin from when the first process boots
+#
+# allow 3 additional seconds for nemesis operations to complete
+# difficult to parse these start times exactly so this is based on obeservation
+#
+# This takes into account a sleep based on the node number
+# e.g. node 1 sleeps for a second, node 2 for 2 seconds etc.
+# This is done to try to ensure a consistent session leader
+first_node_booted_at = node_boot_times.map {|x| x.last + x.first[/\d/].to_i }.sort.first
+nemesis_offset = (nemesis_booted_at - first_node_booted_at) + 1
+# puts "Nem offset #{nemesis_offset}"
+nemesis_events.map! {|ev| ev.merge(:adjusted_time => (ev[:raw_time] + nemesis_offset))}
+nemesis_output = nemesis_events.map {|line| line.values_at(:adjusted_time, :f).join("\t") }.join("\n")
 
 def agreement?(chunk)
   all_nodes_present = chunk.map {|x| x[:node] }.sort.to_set == ("n1".."n5").to_a.to_set
