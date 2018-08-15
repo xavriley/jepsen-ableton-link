@@ -6,6 +6,7 @@
                     [cli :as cli]
                     [client :as client]
                     [control :as c]
+                    [core :as core]
                     [db :as db]
                     [generator :as gen]
                     [nemesis :as nemesis]
@@ -53,10 +54,19 @@
                     (c/exec :bundle :install)
                     (c/exec :rake :compile)
                     (c/exec :iptables :-Z) ;; reset packet counters
-                    (info node "Link installed - starting test")
-                    (c/exec (c/lit "bin/server > /link.log 2>&1 &")))))
-      ;; allow peer discovery to stabilize
-      (Thread/sleep 5000))
+
+                    ;; allow peer discovery to stabilize
+                    (do
+                      ;; This is a barrier
+                      ;; They all wait until all nodes have hit this
+                      ;; We then sleep for an amount of time based on their node id
+                      ;; This allows us to determine that n1 should always be the leader
+                      (core/synchronize test)
+                      (info node (str "Sleeping for " (* (read-string (re-find #"\d" node)) 1000) " ms"))
+                      (Thread/sleep (* (read-string (re-find #"\d" node)) 2000))
+
+                      (info node "Link installed - starting test")
+                      (c/exec (c/lit "bin/server > /link.log 2>&1 &")))))))
 
     (teardown! [_ test node]
       (c/su
@@ -140,12 +150,13 @@
 (defn line-grudge
   "A grudge where every connection is a bridge"
   [nodes]
-  (->> (set nodes)
-       shuffle
+  (do
+    (info "Line grudge " nodes)
+    (->> (into (sorted-set) nodes)
        (partition 2 1) ;; outputs [[n1 n2], [n2 n3] ...]
        (take (count nodes))
        (map (fn [pair] [(first pair) #{(last pair)}]))
-       (into {})))
+       (into {}))))
 
 (defn partition-line
   "Partition nodes so that every connection is a bridge"
