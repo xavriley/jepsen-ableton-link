@@ -125,7 +125,7 @@
 (defn slowing
   "Wraps a nemesis. Before underlying nemesis starts, slows the network by dt
   s. When underlying nemesis resolves, restores network speeds."
-  [nem dt]
+  [nem dt opts]
   (reify nemesis/Nemesis
     (setup! [this test]
       (net/fast! (:net test) test)
@@ -134,9 +134,23 @@
 
     (invoke! [this test op]
       (case (:f op)
-        :start (do (info "slowing down network by " dt " seconds")
-                   (net/slow! (:net test) test {:mean (* dt 1000) :variance 1})
-                   (nemesis/invoke! nem test op))
+        :start (let [nodes-except-leader (vec (rest (sort (:nodes test))))]
+                 (do
+                   (c/with-test-nodes (assoc test :nodes nodes-except-leader)
+                     ;; originally used this be the inclusion of a variance param means we can't do constant offsets
+                     ;; (net/slow! (:net test) (assoc test :nodes nodes-except-leader) {:mean (* dt 1000)})
+
+                     (info "slowing down network by " (* dt 1000) " milliseconds")
+                     ;; (info (str/join " " ["/sbin/tc" :qdisc :replace :dev :eth0 :root :netem :delay (str (* dt 1000) "ms")]))
+
+                     (case (:network-delay-distribution opts)
+                       "normal" (info (c/su (c/exec "/sbin/tc" :qdisc :replace :dev :eth0 :root :netem :delay (str (* dt 1000) "ms") (str (* dt 100) "ms") :distribution :normal)))
+                       "pareto" (info (c/su (c/exec "/sbin/tc" :qdisc :replace :dev :eth0 :root :netem :delay (str (* dt 1) "ms") (str (* dt 1000) "ms") :distribution :pareto)))
+                       "constant" (info (c/su (c/exec "/sbin/tc" :qdisc :replace :dev :eth0 :root :netem :delay (str (* dt 1000) "ms")))))
+                     (Thread/sleep 0.2)
+                     (info (c/exec :ping :n1 :-c 1))))
+                 ;; Topology changes need to use the complete set of nodes
+                 (nemesis/invoke! nem test op))
 
         :stop (try (do (info "removing artificial network delay")
                        (nemesis/invoke! nem test op))
@@ -174,7 +188,7 @@
                        "bridge" (nemesis/partitioner nemesis/bridge)
                        "connected" nemesis/noop)
         bandwidth-fn (if (:network-delay opts)
-                       #(slowing %1 (:network-delay opts))
+                       #(slowing %1 (:network-delay opts) opts)
                        ;; else
                        nil)]
     (if bandwidth-fn
@@ -198,13 +212,17 @@
                       :linear (checker/linearizable)
                       :timeline (timeline/html)})
           :nemesis (choose-nemesis opts)
-          :generator (gen/phases (gen/on #{1} (gen/once {:type :info, :f :setup-packet-logging}))
+          :generator (gen/phases (gen/sleep 5)
+                                 (gen/on #{1} (gen/once {:type :info, :f :setup-packet-logging}))
+                                 (gen/sleep 2)
                                  (->>
                                    (gen/seq
                                      (cycle [(gen/once {:type :invoke, :f :write, :value 120})
                                              (gen/seq (cycle [r w w]))]))
                                    (gen/delay (:delay opts))
                                    (gen/singlethreaded)
+                                   ;; uncomment to restrict nemesis to subset of nodes
+                                   ;; (gen/on #{1 2 3})
                                    (gen/nemesis (gen/seq (cycle
                                                            [(gen/sleep (:nemesis-duration opts))
                                                             {:type :info, :f :start}
@@ -216,18 +234,22 @@
                                    ;; (for consistent test results) but with a notion of how long these
                                    ;; will take
                                    (gen/limit (/ (:time-limit opts) (:delay opts))))
-                                 (gen/barrier (gen/once {:type :info, :f :log-packet-data}))
+                                 (gen/on #{1} (gen/once {:type :info, :f :log-packet-data}))
                                  (gen/sleep 5))}))
 
 (def cli-opts
   "Additional command line options."
     [["-d" "--delay SECS" "Delay between read/write operations."
+      :parse-fn read-string
       :default 2]
      [nil "--nemesis-duration SECS" "Length of the window between nemesis start/stop"
+      :parse-fn read-string
       :default 5]
      ["-t" "--topology TOPOLOGY" "Topology of partition for nemesis"
       :default "connected"]
-     [nil "--network-delay SECS" "Delay to introduce to packets between nodes"
+     [nil "--network-delay-distribution DISTRIBUTION" "distribution of delay for packets between nodes"
+      :default "normal"]
+     [nil "--network-delay secs" "delay to introduce to packets between nodes"
       :parse-fn read-string]
      [nil "--no-teardown" "Don't remove build of gem in teardown"]])
 
