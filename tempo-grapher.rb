@@ -32,13 +32,15 @@ def parse_edn(line)
 end
 
 def nemesis_regions(data)
-  default_duration = data[1].first - data[0].first
+  return "" if data.empty?
+
+  default_duration = (data[1][:adjusted_time] - data[0][:adjusted_time]) rescue 100
 
   data.each_slice(2).map {|start,stop|
     %Q{
       set obj rect \
-      from #{start.first}, graph 0 \
-      to   #{stop ? stop.first : start.first + default_duration}, graph 1 \
+      from #{start[:adjusted_time]}, graph 0 \
+      to   #{stop ? stop[:adjusted_time] : start[:adjusted_time] + default_duration}, graph 1 \
       fillcolor rgb "#000000" \
       fillstyle transparent solid 0.05 \
       noborder
@@ -96,7 +98,6 @@ $data_#{temp_name} << #{temp_name.upcase}
 end
 
 title_params = []
-nemesis_start_time = nil
 tempo_points = {}
 packet_stats = []
 offset_measurements = []
@@ -117,8 +118,7 @@ ARGF.each.with_index do |l, idx|
       next if l[/:isolated|healed|indeterminate/]
 
       event = parse_edn(l)
-      nemesis_start_time ||= event[:time]
-      nemesis_events << [(event[:time] - nemesis_start_time) * 1e-9, event[:f]]
+      nemesis_events << event.merge(:raw_time => event[:time] * 1e-9)
     when /:beat/
       node = get_node_name(l)
       data = eval(l.gsub(/\A(.+)\{\:/, '{:').gsub('?', '').gsub(/\}(.+)\Z/, '}'))
@@ -146,7 +146,7 @@ ARGF.each.with_index do |l, idx|
       if session_name.nil?
         session_name = last_line.scan(/Session (.{8})/).flatten.compact.first
       end
-      offset = l.scan(/\(1, -(\d+)+\)/).flatten.first.to_f
+      offset = l.scan(/\(1, -(\d+)+\)/).flatten.first.to_i
       offset_measurements << {node: node, session_name: session_name, offset: offset, last_seen_now: last_seen_now}
     when /Starting nemesis/
       nemesis_booted_at ||= DateTime.parse(l[/\d\d\d\d-\d\d-\d\d (\d\d:\d\d:\d\d,\d\d\d)/]).to_time.to_i
@@ -271,7 +271,10 @@ else
   }[1..-1].compact.inject{|sum,i| sum += i }
 end
 
-if divergence_events.length <= 2
+if divergence_events.length <= 3
+  # we drop first two to allow for initialization sometimes there's a hanging
+  # divergence at the end too This doesn't affect the convergence figure
+  # because we stop counting once a node has left
   total_divergence_time = 0.0
 end
 
