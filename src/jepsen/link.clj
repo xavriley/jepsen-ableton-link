@@ -55,6 +55,9 @@
                     (c/exec :rake :compile)
                     (c/exec :iptables :-Z) ;; reset packet counters
 
+                    (info node "Initial ping times without network delay")
+                    (info node (c/exec :ping "n2" :-c 5))
+
                     ;; allow peer discovery to stabilize
                     (do
                       ;; This is a barrier
@@ -106,7 +109,6 @@
         ;; connect to all nodes and add a rule so that udp traffic is counted by iptables
         :setup-packet-logging (do (c/with-test-nodes test
                                     (doseq [hostname ["n1" "n2" "n3" "n4" "n5"]]
-                                      (info (cn/ip hostname))
                                       (c/su (c/exec (c/lit (str "iptables -I INPUT -p udp -s " (cn/ip hostname) " -m comment --comment \"Logging UDP from " (cn/ip hostname) "\""))))
                                       (c/su (c/exec (c/lit (str "iptables -I OUTPUT -p udp -m comment --comment \"Logging outgoing UDP\""))))))
                                   (assoc op :type, :info))
