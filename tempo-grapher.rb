@@ -112,6 +112,8 @@ ARGF.each.with_index do |l, idx|
     case l
     when /:topology/
       title_params << l.match(/(:topology "\w+")/).captures.first
+    when /:network-delay-distribution/
+      title_params << l.match(/(:network-delay-distribution "\w+"),/).captures.first
     when /:network-delay/
       title_params << l.match(/(:network-delay [\d\.]+),/).captures.first
     when /:nemesis,/
@@ -155,7 +157,7 @@ ARGF.each.with_index do |l, idx|
     when /docker_default/
       if l[/udp/]
         node = get_node_name(l)
-        pkts,bytes,fromnode = l.strip.match(/(\d+)  ([\dKM]+)            udp  --  any    any     jepsen-(n\d)/).captures
+        pkts,bytes,fromnode = l.strip.match(/(\d+)\s+([\dKM]+)\s+udp\s+--\s+any\s+any\s+jepsen-(n\d)/).captures
         packet_stats << {node: node, pkts: pkts.to_i, bytes: bytes, fromnode: fromnode}
       end
     else
@@ -170,6 +172,9 @@ ARGF.each.with_index do |l, idx|
   last_line = l
 end
 
+# better algo
+# find leader
+# find offset
 session_beat_origin = tempo_points.map {|k,v| v["values"].map{|y| y[:beat_zero] }.first }.sort.first
 data = tempo_points.map {|k,v| v["values"].map {|x| [x[:now] - session_beat_origin, x[:tempo]]} }
 
