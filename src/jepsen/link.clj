@@ -144,6 +144,8 @@
                      ;; (info (str/join " " ["/sbin/tc" :qdisc :replace :dev :eth0 :root :netem :delay (str (* dt 1000) "ms")]))
 
                      (case (:network-delay-distribution opts)
+                       "none" (info "No delay applied")
+                       "loss" (info (c/su (c/exec "/sbin/tc" :qdisc :replace :dev :eth0 :root :netem :loss (str dt "%") (str 25 "%"))))
                        "normal" (info (c/su (c/exec "/sbin/tc" :qdisc :replace :dev :eth0 :root :netem :delay (str (* dt 1000) "ms") (str (* dt 100) "ms") :distribution :normal)))
                        "pareto" (info (c/su (c/exec "/sbin/tc" :qdisc :replace :dev :eth0 :root :netem :delay (str (* dt 1) "ms") (str (* dt 1000) "ms") :distribution :pareto)))
                        "constant" (info (c/su (c/exec "/sbin/tc" :qdisc :replace :dev :eth0 :root :netem :delay (str (* dt 1000) "ms")))))
@@ -167,7 +169,6 @@
   "A grudge where every connection is a bridge"
   [nodes]
   (do
-    (info "Line grudge " nodes)
     (->> (into (sorted-set) nodes)
        (partition 2 1) ;; outputs [[n1 n2], [n2 n3] ...]
        (take (count nodes))
@@ -224,10 +225,10 @@
                                    ;; uncomment to restrict nemesis to subset of nodes
                                    ;; (gen/on #{1 2 3})
                                    (gen/nemesis (gen/seq (cycle
-                                                           [(gen/sleep (:nemesis-duration opts))
-                                                            {:type :info, :f :start}
+                                                           [{:type :info, :f :start}
                                                             (gen/sleep (:nemesis-duration opts))
-                                                            {:type :info, :f :stop}])))
+                                                            {:type :info, :f :stop}
+                                                            (gen/sleep (:nemesis-duration opts))])))
                                    ;; Time limit feels like a more intuitive way to test
                                    ;; rather than using the concept of the number of operations
                                    ;; The following gives a compromise - an exact number of operations
@@ -248,7 +249,7 @@
      ["-t" "--topology TOPOLOGY" "Topology of partition for nemesis"
       :default "connected"]
      [nil "--network-delay-distribution DISTRIBUTION" "distribution of delay for packets between nodes"
-      :default "normal"]
+      :default "none"]
      [nil "--network-delay secs" "delay to introduce to packets between nodes"
       :parse-fn read-string]
      [nil "--no-teardown" "Don't remove build of gem in teardown"]])
@@ -262,4 +263,4 @@
                                       :opt-spec cli-opts})
                 args)
       ;; run custom reporting from Ruby script
-      (shell/sh "grep -Hn '^' store/latest/{history.edn,n*/link.log} | ruby tempo-grapher.rb")))
+      (info (shell/sh "cd /jepsen && /usr/bin/ruby ./tempo-grapher.rb"))))
