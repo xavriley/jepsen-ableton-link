@@ -107,7 +107,7 @@ nemesis_events = []
 last_seen_now = 0.0
 last_line = ""
 
-ARGF.each.with_index do |l, idx|
+`grep -Hn '^' store/latest/{jepsen.log,history.edn,n*/link.log,n*/iptables.log}`.each_line.with_index do |l, idx|
   begin
     case l
     when /:topology/
@@ -149,7 +149,9 @@ ARGF.each.with_index do |l, idx|
         session_name = last_line.scan(/Session (.{8})/).flatten.compact.first
       end
       offset = l.scan(/\(1, -(\d+)+\)/).flatten.first.to_i
-      offset_measurements << {node: node, session_name: session_name, offset: offset, last_seen_now: last_seen_now}
+      if offset > 1
+        offset_measurements << {node: node, session_name: session_name, offset: offset, last_seen_now: last_seen_now}
+      end
     when /Starting nemesis/
       nemesis_booted_at ||= DateTime.parse(l[/\d\d\d\d-\d\d-\d\d (\d\d:\d\d:\d\d,\d\d\d)/]).to_time.to_i
     when /starting test/
@@ -396,3 +398,8 @@ File.open('gnuplot_commands.gnu', 'wb') do |file|
 end
 
 gnuplot(commands)
+
+folder_name = title_params.join("_").downcase.gsub(/[^a-z0-9]+/, '_').gsub(/_\Z/, '')
+`mkdir -p figures_for_publication/#{folder_name}`
+`GLOBIGNORE="./figures_for_publication/" cp -R {gnuplot_commands.gnu,./*.dat,packet_stats.tsv,plot.pdf,test_output.rbdump} figures_for_publication/#{folder_name}`
+`cp -L -R ./store/latest figures_for_publication/#{folder_name}`
