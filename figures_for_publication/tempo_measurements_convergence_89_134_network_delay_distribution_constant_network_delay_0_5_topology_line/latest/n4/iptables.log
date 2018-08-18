@@ -1,0 +1,9 @@
+Chain INPUT (policy ACCEPT 387 packets, 43159 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+   70  9450 DROP       all  --  any    any     jepsen-n5.docker_default  anywhere            
+
+Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain OUTPUT (policy ACCEPT 444 packets, 41594 bytes)
+ pkts bytes target     prot opt in     out     source               destination         

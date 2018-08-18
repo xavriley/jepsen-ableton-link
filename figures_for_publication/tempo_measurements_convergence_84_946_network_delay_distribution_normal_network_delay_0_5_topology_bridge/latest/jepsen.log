@@ -1,0 +1,470 @@
+2018-08-17 21:10:56,656{GMT}	INFO	[jepsen test runner] jepsen.core: Running test:
+ {:no-teardown true,
+ :concurrency 5,
+ :db
+ #object[jepsen.link$db$reify__373 0x1084f78c "jepsen.link$db$reify__373@1084f78c"],
+ :name "link",
+ :start-time
+ #object[org.joda.time.DateTime 0x3df1a1ac "2018-08-17T21:10:56.000Z"],
+ :net
+ #object[jepsen.net$reify__3910 0x49cb1baf "jepsen.net$reify__3910@49cb1baf"],
+ :client {:conn nil},
+ :barrier
+ #object[java.util.concurrent.CyclicBarrier 0x1e0fdb2f "java.util.concurrent.CyclicBarrier@1e0fdb2f"],
+ :network-delay-distribution "normal",
+ :ssh
+ {:username "root",
+  :password "root",
+  :strict-host-key-checking false,
+  :private-key-path nil},
+ :nemesis-duration 30,
+ :checker
+ #object[jepsen.checker$compose$reify__3577 0x4548d254 "jepsen.checker$compose$reify__3577@4548d254"],
+ :nemesis
+ #object[jepsen.link$slowing$reify__434 0x550de6b8 "jepsen.link$slowing$reify__434@550de6b8"],
+ :active-histories #<Atom@1a565afb: #{}>,
+ :nodes ["n1" "n2" "n3" "n4" "n5"],
+ :test-count 1,
+ :generator
+ #object[jepsen.generator$concat$reify__2328 0xb5de58f "jepsen.generator$concat$reify__2328@b5de58f"],
+ :os
+ #object[jepsen.os.debian$reify__363 0x663f237a "jepsen.os.debian$reify__363@663f237a"],
+ :time-limit 180,
+ :network-delay 0.5,
+ :delay 2,
+ :topology "bridge",
+ :model {:value nil}}
+
+2018-08-17 21:10:57,405{GMT}	INFO	[jepsen node n2] jepsen.os.debian: n2 setting up debian
+2018-08-17 21:10:57,405{GMT}	INFO	[jepsen node n3] jepsen.os.debian: n3 setting up debian
+2018-08-17 21:10:57,406{GMT}	INFO	[jepsen node n5] jepsen.os.debian: n5 setting up debian
+2018-08-17 21:10:57,406{GMT}	INFO	[jepsen node n4] jepsen.os.debian: n4 setting up debian
+2018-08-17 21:10:57,405{GMT}	INFO	[jepsen node n1] jepsen.os.debian: n1 setting up debian
+2018-08-17 21:10:58,117{GMT}	WARN	[jepsen node n2] jepsen.control: Encountered error with conn [:control "n2"]; reopening
+2018-08-17 21:11:00,034{GMT}	INFO	[jepsen node n1] jepsen.os.debian: Installing #{libssl-dev rubygems}
+2018-08-17 21:11:00,077{GMT}	INFO	[jepsen node n5] jepsen.os.debian: Installing #{libssl-dev rubygems}
+2018-08-17 21:11:00,105{GMT}	INFO	[jepsen node n2] jepsen.os.debian: Installing #{libssl-dev rubygems}
+2018-08-17 21:11:00,105{GMT}	INFO	[jepsen node n3] jepsen.os.debian: Installing #{libssl-dev rubygems}
+2018-08-17 21:11:00,126{GMT}	INFO	[jepsen node n4] jepsen.os.debian: Installing #{libssl-dev rubygems}
+2018-08-17 21:11:05,133{GMT}	INFO	[jepsen node n2] jepsen.link: Installing packages (this takes several minutes)
+2018-08-17 21:11:05,172{GMT}	INFO	[jepsen node n1] jepsen.link: Installing packages (this takes several minutes)
+2018-08-17 21:11:05,202{GMT}	INFO	[jepsen node n5] jepsen.link: Installing packages (this takes several minutes)
+2018-08-17 21:11:05,260{GMT}	INFO	[jepsen node n3] jepsen.link: Installing packages (this takes several minutes)
+2018-08-17 21:11:05,472{GMT}	INFO	[jepsen node n4] jepsen.link: Installing packages (this takes several minutes)
+2018-08-17 21:11:43,847{GMT}	INFO	[jepsen node n3] jepsen.link: n3 Initial ping times without network delay
+2018-08-17 21:11:44,079{GMT}	INFO	[jepsen node n5] jepsen.link: n5 Initial ping times without network delay
+2018-08-17 21:11:44,245{GMT}	INFO	[jepsen node n4] jepsen.link: n4 Initial ping times without network delay
+2018-08-17 21:11:44,542{GMT}	INFO	[jepsen node n2] jepsen.link: n2 Initial ping times without network delay
+2018-08-17 21:11:44,556{GMT}	INFO	[jepsen node n1] jepsen.link: n1 Initial ping times without network delay
+2018-08-17 21:11:48,101{GMT}	INFO	[jepsen node n3] jepsen.link: n3 PING n2 (172.18.0.4) 56(84) bytes of data.
+64 bytes from jepsen-n2.docker_default (172.18.0.4): icmp_seq=1 ttl=64 time=0.146 ms
+64 bytes from jepsen-n2.docker_default (172.18.0.4): icmp_seq=2 ttl=64 time=0.079 ms
+64 bytes from jepsen-n2.docker_default (172.18.0.4): icmp_seq=3 ttl=64 time=0.120 ms
+64 bytes from jepsen-n2.docker_default (172.18.0.4): icmp_seq=4 ttl=64 time=0.101 ms
+64 bytes from jepsen-n2.docker_default (172.18.0.4): icmp_seq=5 ttl=64 time=0.128 ms
+
+--- n2 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4117ms
+rtt min/avg/max/mdev = 0.079/0.114/0.146/0.026 ms
+2018-08-17 21:11:48,313{GMT}	INFO	[jepsen node n5] jepsen.link: n5 PING n2 (172.18.0.4) 56(84) bytes of data.
+64 bytes from jepsen-n2.docker_default (172.18.0.4): icmp_seq=1 ttl=64 time=0.105 ms
+64 bytes from jepsen-n2.docker_default (172.18.0.4): icmp_seq=2 ttl=64 time=0.111 ms
+64 bytes from jepsen-n2.docker_default (172.18.0.4): icmp_seq=3 ttl=64 time=0.110 ms
+64 bytes from jepsen-n2.docker_default (172.18.0.4): icmp_seq=4 ttl=64 time=0.121 ms
+64 bytes from jepsen-n2.docker_default (172.18.0.4): icmp_seq=5 ttl=64 time=0.110 ms
+
+--- n2 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4133ms
+rtt min/avg/max/mdev = 0.105/0.111/0.121/0.010 ms
+2018-08-17 21:11:48,490{GMT}	INFO	[jepsen node n4] jepsen.link: n4 PING n2 (172.18.0.4) 56(84) bytes of data.
+64 bytes from jepsen-n2.docker_default (172.18.0.4): icmp_seq=1 ttl=64 time=0.116 ms
+64 bytes from jepsen-n2.docker_default (172.18.0.4): icmp_seq=2 ttl=64 time=0.103 ms
+64 bytes from jepsen-n2.docker_default (172.18.0.4): icmp_seq=3 ttl=64 time=0.117 ms
+64 bytes from jepsen-n2.docker_default (172.18.0.4): icmp_seq=4 ttl=64 time=0.122 ms
+64 bytes from jepsen-n2.docker_default (172.18.0.4): icmp_seq=5 ttl=64 time=0.110 ms
+
+--- n2 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4111ms
+rtt min/avg/max/mdev = 0.103/0.113/0.122/0.013 ms
+2018-08-17 21:11:48,793{GMT}	INFO	[jepsen node n2] jepsen.link: n2 PING n2 (172.18.0.4) 56(84) bytes of data.
+64 bytes from n2 (172.18.0.4): icmp_seq=1 ttl=64 time=0.051 ms
+64 bytes from n2 (172.18.0.4): icmp_seq=2 ttl=64 time=0.087 ms
+64 bytes from n2 (172.18.0.4): icmp_seq=3 ttl=64 time=0.148 ms
+64 bytes from n2 (172.18.0.4): icmp_seq=4 ttl=64 time=0.062 ms
+64 bytes from n2 (172.18.0.4): icmp_seq=5 ttl=64 time=0.061 ms
+
+--- n2 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4158ms
+rtt min/avg/max/mdev = 0.051/0.081/0.148/0.036 ms
+2018-08-17 21:11:48,805{GMT}	INFO	[jepsen node n1] jepsen.link: n1 PING n2 (172.18.0.4) 56(84) bytes of data.
+64 bytes from jepsen-n2.docker_default (172.18.0.4): icmp_seq=1 ttl=64 time=0.100 ms
+64 bytes from jepsen-n2.docker_default (172.18.0.4): icmp_seq=2 ttl=64 time=0.084 ms
+64 bytes from jepsen-n2.docker_default (172.18.0.4): icmp_seq=3 ttl=64 time=0.091 ms
+64 bytes from jepsen-n2.docker_default (172.18.0.4): icmp_seq=4 ttl=64 time=0.154 ms
+64 bytes from jepsen-n2.docker_default (172.18.0.4): icmp_seq=5 ttl=64 time=0.178 ms
+
+--- n2 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4141ms
+rtt min/avg/max/mdev = 0.084/0.121/0.178/0.038 ms
+2018-08-17 21:11:48,807{GMT}	INFO	[jepsen node n3] jepsen.link: n3 Sleeping for 3000 ms
+2018-08-17 21:11:48,807{GMT}	INFO	[jepsen node n1] jepsen.link: n1 Sleeping for 1000 ms
+2018-08-17 21:11:48,807{GMT}	INFO	[jepsen node n5] jepsen.link: n5 Sleeping for 5000 ms
+2018-08-17 21:11:48,808{GMT}	INFO	[jepsen node n2] jepsen.link: n2 Sleeping for 2000 ms
+2018-08-17 21:11:48,807{GMT}	INFO	[jepsen node n4] jepsen.link: n4 Sleeping for 4000 ms
+2018-08-17 21:11:50,811{GMT}	INFO	[jepsen node n1] jepsen.link: n1 Link installed - starting test
+2018-08-17 21:11:52,813{GMT}	INFO	[jepsen node n2] jepsen.link: n2 Link installed - starting test
+2018-08-17 21:11:54,813{GMT}	INFO	[jepsen node n3] jepsen.link: n3 Link installed - starting test
+2018-08-17 21:11:56,814{GMT}	INFO	[jepsen node n4] jepsen.link: n4 Link installed - starting test
+2018-08-17 21:11:58,812{GMT}	INFO	[jepsen node n5] jepsen.link: n5 Link installed - starting test
+2018-08-17 21:11:58,933{GMT}	INFO	[jepsen nemesis] jepsen.core: Starting nemesis
+2018-08-17 21:11:58,937{GMT}	INFO	[jepsen worker 0] jepsen.core: Starting worker 0
+2018-08-17 21:11:58,942{GMT}	INFO	[jepsen worker 0] jepsen.core: Running worker 0
+2018-08-17 21:11:58,943{GMT}	INFO	[jepsen worker 1] jepsen.core: Starting worker 1
+2018-08-17 21:11:58,975{GMT}	INFO	[jepsen worker 2] jepsen.core: Starting worker 2
+2018-08-17 21:11:58,993{GMT}	INFO	[jepsen worker 1] jepsen.core: Running worker 1
+2018-08-17 21:11:59,000{GMT}	INFO	[jepsen worker 3] jepsen.core: Starting worker 3
+2018-08-17 21:11:59,002{GMT}	INFO	[jepsen worker 4] jepsen.core: Starting worker 4
+2018-08-17 21:11:59,011{GMT}	INFO	[jepsen worker 2] jepsen.core: Running worker 2
+2018-08-17 21:11:59,013{GMT}	INFO	[jepsen worker 3] jepsen.core: Running worker 3
+2018-08-17 21:11:59,017{GMT}	INFO	[jepsen worker 4] jepsen.core: Running worker 4
+2018-08-17 21:11:59,253{GMT}	WARN	[jepsen node n2] jepsen.control: Encountered error with conn [:control "n2"]; reopening
+2018-08-17 21:12:00,770{GMT}	INFO	[jepsen nemesis] jepsen.core: Running nemesis
+2018-08-17 21:12:05,774{GMT}	INFO	[jepsen worker 1] jepsen.util: 1	:info	:setup-packet-logging	nil
+2018-08-17 21:12:07,355{GMT}	INFO	[jepsen worker 1] jepsen.util: 1	:info	:setup-packet-logging	nil
+2018-08-17 21:12:14,347{GMT}	INFO	[jepsen nemesis] jepsen.util: :nemesis	:info	:start	nil
+2018-08-17 21:12:14,365{GMT}	INFO	[jepsen node n3] jepsen.link: slowing down network by  500.0  milliseconds
+2018-08-17 21:12:14,365{GMT}	INFO	[jepsen node n4] jepsen.link: slowing down network by  500.0  milliseconds
+2018-08-17 21:12:14,365{GMT}	INFO	[jepsen node n5] jepsen.link: slowing down network by  500.0  milliseconds
+2018-08-17 21:12:14,366{GMT}	INFO	[jepsen node n2] jepsen.link: slowing down network by  500.0  milliseconds
+2018-08-17 21:12:14,879{GMT}	INFO	[jepsen node n2] jepsen.link: 
+2018-08-17 21:12:14,890{GMT}	INFO	[jepsen node n4] jepsen.link: 
+2018-08-17 21:12:14,990{GMT}	INFO	[jepsen node n5] jepsen.link: 
+2018-08-17 21:12:15,074{GMT}	INFO	[jepsen node n3] jepsen.link: 
+2018-08-17 21:12:16,347{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:invoke	:write	120
+2018-08-17 21:12:16,506{GMT}	INFO	[jepsen node n5] jepsen.link: PING n1 (172.18.0.6) 56(84) bytes of data.
+64 bytes from jepsen-n1.docker_default (172.18.0.6): icmp_seq=1 ttl=64 time=491 ms
+
+--- n1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 491.333/491.333/491.333/0.000 ms
+2018-08-17 21:12:16,520{GMT}	INFO	[jepsen node n3] jepsen.link: PING n1 (172.18.0.6) 56(84) bytes of data.
+64 bytes from jepsen-n1.docker_default (172.18.0.6): icmp_seq=1 ttl=64 time=462 ms
+
+--- n1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 462.355/462.355/462.355/0.000 ms
+2018-08-17 21:12:16,540{GMT}	INFO	[jepsen node n2] jepsen.link: PING n1 (172.18.0.6) 56(84) bytes of data.
+64 bytes from jepsen-n1.docker_default (172.18.0.6): icmp_seq=1 ttl=64 time=541 ms
+
+--- n1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 541.086/541.086/541.086/0.000 ms
+2018-08-17 21:12:16,559{GMT}	INFO	[jepsen node n4] jepsen.link: PING n1 (172.18.0.6) 56(84) bytes of data.
+64 bytes from jepsen-n1.docker_default (172.18.0.6): icmp_seq=1 ttl=64 time=531 ms
+
+--- n1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 531.345/531.345/531.345/0.000 ms
+2018-08-17 21:12:17,335{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:ok	:write	120
+2018-08-17 21:12:17,786{GMT}	INFO	[jepsen nemesis] jepsen.util: :nemesis	:info	:start	[:isolated {"n2" #{"n5" "n4"}, "n1" #{"n5" "n4"}, "n5" #{"n2" "n1"}, "n4" #{"n2" "n1"}}]
+2018-08-17 21:12:18,349{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:invoke	:read	nil
+2018-08-17 21:12:19,340{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:ok	:read	120
+2018-08-17 21:12:20,350{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:invoke	:write	156
+2018-08-17 21:12:21,321{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:ok	:write	156
+2018-08-17 21:12:22,351{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:invoke	:write	173
+2018-08-17 21:12:23,324{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:ok	:write	173
+2018-08-17 21:12:24,352{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:invoke	:read	nil
+2018-08-17 21:12:24,362{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:ok	:read	173
+2018-08-17 21:12:26,353{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:invoke	:write	102
+2018-08-17 21:12:27,338{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:ok	:write	102
+2018-08-17 21:12:28,355{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:invoke	:write	71
+2018-08-17 21:12:29,318{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:ok	:write	71
+2018-08-17 21:12:30,356{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:invoke	:read	nil
+2018-08-17 21:12:31,375{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:ok	:read	71
+2018-08-17 21:12:32,359{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:invoke	:write	97
+2018-08-17 21:12:33,430{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:ok	:write	97
+2018-08-17 21:12:34,360{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:invoke	:write	96
+2018-08-17 21:12:34,370{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:ok	:write	96
+2018-08-17 21:12:36,361{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:invoke	:read	nil
+2018-08-17 21:12:37,431{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:ok	:read	96
+2018-08-17 21:12:38,328{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:invoke	:write	107
+2018-08-17 21:12:39,392{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:ok	:write	107
+2018-08-17 21:12:40,344{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:invoke	:write	118
+2018-08-17 21:12:41,451{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:ok	:write	118
+2018-08-17 21:12:42,400{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:invoke	:read	nil
+2018-08-17 21:12:43,511{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:ok	:read	118
+2018-08-17 21:12:44,401{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:invoke	:write	150
+2018-08-17 21:12:44,424{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:ok	:write	150
+2018-08-17 21:12:46,402{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:invoke	:write	69
+2018-08-17 21:12:47,383{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:ok	:write	69
+2018-08-17 21:12:48,404{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:invoke	:read	nil
+2018-08-17 21:12:49,511{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:ok	:read	69
+2018-08-17 21:12:50,455{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:invoke	:write	205
+2018-08-17 21:12:51,569{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:ok	:write	205
+2018-08-17 21:12:52,515{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:invoke	:write	207
+2018-08-17 21:12:53,574{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:ok	:write	207
+2018-08-17 21:12:54,517{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:invoke	:read	nil
+2018-08-17 21:12:54,527{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:ok	:read	207
+2018-08-17 21:12:54,779{GMT}	INFO	[jepsen nemesis] jepsen.util: :nemesis	:info	:stop	nil
+2018-08-17 21:12:54,781{GMT}	INFO	[jepsen nemesis] jepsen.link: removing artificial network delay
+2018-08-17 21:12:56,518{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:invoke	:write	162
+2018-08-17 21:12:57,600{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:ok	:write	162
+2018-08-17 21:12:58,521{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:invoke	:write	219
+2018-08-17 21:12:58,531{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:ok	:write	219
+2018-08-17 21:12:58,994{GMT}	INFO	[jepsen nemesis] jepsen.util: :nemesis	:info	:stop	:network-healed
+2018-08-17 21:13:00,574{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:invoke	:read	nil
+2018-08-17 21:13:00,586{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:ok	:read	219
+2018-08-17 21:13:02,577{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:invoke	:write	63
+2018-08-17 21:13:02,587{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:ok	:write	63
+2018-08-17 21:13:04,578{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:invoke	:write	156
+2018-08-17 21:13:04,590{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:ok	:write	156
+2018-08-17 21:13:06,608{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:invoke	:read	nil
+2018-08-17 21:13:06,618{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:ok	:read	156
+2018-08-17 21:13:08,575{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:invoke	:write	37
+2018-08-17 21:13:08,589{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:ok	:write	37
+2018-08-17 21:13:10,577{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:invoke	:write	153
+2018-08-17 21:13:10,585{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:ok	:write	153
+2018-08-17 21:13:12,579{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:invoke	:read	nil
+2018-08-17 21:13:12,586{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:ok	:read	153
+2018-08-17 21:13:14,580{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:invoke	:write	72
+2018-08-17 21:13:14,592{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:ok	:write	72
+2018-08-17 21:13:16,581{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:invoke	:write	58
+2018-08-17 21:13:16,593{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:ok	:write	58
+2018-08-17 21:13:18,582{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:invoke	:read	nil
+2018-08-17 21:13:18,591{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:ok	:read	58
+2018-08-17 21:13:20,582{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:invoke	:write	215
+2018-08-17 21:13:20,592{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:ok	:write	215
+2018-08-17 21:13:22,584{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:invoke	:write	203
+2018-08-17 21:13:22,593{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:ok	:write	203
+2018-08-17 21:13:24,586{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:invoke	:read	nil
+2018-08-17 21:13:24,593{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:ok	:read	203
+2018-08-17 21:13:26,587{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:invoke	:write	181
+2018-08-17 21:13:26,595{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:ok	:write	181
+2018-08-17 21:13:28,588{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:invoke	:write	120
+2018-08-17 21:13:28,597{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:ok	:write	120
+2018-08-17 21:13:30,589{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:invoke	:read	nil
+2018-08-17 21:13:30,601{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:ok	:read	120
+2018-08-17 21:13:32,590{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:invoke	:write	116
+2018-08-17 21:13:32,603{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:ok	:write	116
+2018-08-17 21:13:34,590{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:invoke	:write	153
+2018-08-17 21:13:34,598{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:ok	:write	153
+2018-08-17 21:13:35,965{GMT}	INFO	[jepsen nemesis] jepsen.util: :nemesis	:info	:start	nil
+2018-08-17 21:13:35,968{GMT}	INFO	[jepsen node n4] jepsen.link: slowing down network by  500.0  milliseconds
+2018-08-17 21:13:35,971{GMT}	INFO	[jepsen node n5] jepsen.link: slowing down network by  500.0  milliseconds
+2018-08-17 21:13:35,971{GMT}	INFO	[jepsen node n2] jepsen.link: slowing down network by  500.0  milliseconds
+2018-08-17 21:13:35,972{GMT}	INFO	[jepsen node n3] jepsen.link: slowing down network by  500.0  milliseconds
+2018-08-17 21:13:36,050{GMT}	WARN	[jepsen node n4] jepsen.control: Encountered error with conn [:control "n4"]; reopening
+2018-08-17 21:13:36,499{GMT}	INFO	[jepsen node n2] jepsen.link: 
+2018-08-17 21:13:36,591{GMT}	INFO	[jepsen node n5] jepsen.link: 
+2018-08-17 21:13:36,591{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:invoke	:read	nil
+2018-08-17 21:13:36,599{GMT}	INFO	[jepsen node n3] jepsen.link: 
+2018-08-17 21:13:37,593{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:ok	:read	153
+2018-08-17 21:13:38,005{GMT}	INFO	[jepsen node n4] jepsen.link: 
+2018-08-17 21:13:38,163{GMT}	INFO	[jepsen node n3] jepsen.link: PING n1 (172.18.0.6) 56(84) bytes of data.
+64 bytes from jepsen-n1.docker_default (172.18.0.6): icmp_seq=1 ttl=64 time=570 ms
+
+--- n1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 570.965/570.965/570.965/0.000 ms
+2018-08-17 21:13:38,167{GMT}	INFO	[jepsen node n5] jepsen.link: PING n1 (172.18.0.6) 56(84) bytes of data.
+64 bytes from jepsen-n1.docker_default (172.18.0.6): icmp_seq=1 ttl=64 time=401 ms
+
+--- n1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 401.052/401.052/401.052/0.000 ms
+2018-08-17 21:13:38,210{GMT}	INFO	[jepsen node n2] jepsen.link: PING n1 (172.18.0.6) 56(84) bytes of data.
+64 bytes from jepsen-n1.docker_default (172.18.0.6): icmp_seq=1 ttl=64 time=552 ms
+
+--- n1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 552.944/552.944/552.944/0.000 ms
+2018-08-17 21:13:38,558{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:invoke	:write	110
+2018-08-17 21:13:39,548{GMT}	INFO	[jepsen node n4] jepsen.link: PING n1 (172.18.0.6) 56(84) bytes of data.
+64 bytes from jepsen-n1.docker_default (172.18.0.6): icmp_seq=1 ttl=64 time=460 ms
+
+--- n1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 460.521/460.521/460.521/0.000 ms
+2018-08-17 21:13:39,639{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:ok	:write	110
+2018-08-17 21:13:40,558{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:invoke	:write	211
+2018-08-17 21:13:40,676{GMT}	INFO	[jepsen nemesis] jepsen.util: :nemesis	:info	:start	[:isolated {"n2" #{"n5" "n4"}, "n1" #{"n5" "n4"}, "n5" #{"n2" "n1"}, "n4" #{"n2" "n1"}}]
+2018-08-17 21:13:41,543{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:ok	:write	211
+2018-08-17 21:13:42,560{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:invoke	:read	nil
+2018-08-17 21:13:43,562{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:ok	:read	211
+2018-08-17 21:13:44,561{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:invoke	:write	144
+2018-08-17 21:13:44,573{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:ok	:write	144
+2018-08-17 21:13:46,564{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:invoke	:write	138
+2018-08-17 21:13:47,689{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:ok	:write	138
+2018-08-17 21:13:48,642{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:invoke	:read	nil
+2018-08-17 21:13:49,659{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:ok	:read	138
+2018-08-17 21:13:50,643{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:invoke	:write	124
+2018-08-17 21:13:51,631{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:ok	:write	124
+2018-08-17 21:13:52,645{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:invoke	:write	141
+2018-08-17 21:13:53,626{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:ok	:write	141
+2018-08-17 21:13:54,646{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:invoke	:read	nil
+2018-08-17 21:13:54,655{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:ok	:read	141
+2018-08-17 21:13:56,692{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:invoke	:write	39
+2018-08-17 21:13:57,631{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:ok	:write	39
+2018-08-17 21:13:58,693{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:invoke	:write	65
+2018-08-17 21:13:59,604{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:ok	:write	65
+2018-08-17 21:14:00,695{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:invoke	:read	nil
+2018-08-17 21:14:01,697{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:ok	:read	65
+2018-08-17 21:14:02,696{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:invoke	:write	113
+2018-08-17 21:14:03,694{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:ok	:write	113
+2018-08-17 21:14:04,696{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:invoke	:write	104
+2018-08-17 21:14:04,706{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:ok	:write	104
+2018-08-17 21:14:06,697{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:invoke	:read	nil
+2018-08-17 21:14:07,733{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:ok	:read	104
+2018-08-17 21:14:08,664{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:invoke	:write	59
+2018-08-17 21:14:09,744{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:ok	:write	59
+2018-08-17 21:14:10,669{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:invoke	:write	123
+2018-08-17 21:14:11,582{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:ok	:write	123
+2018-08-17 21:14:12,670{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:invoke	:read	nil
+2018-08-17 21:14:13,661{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:ok	:read	123
+2018-08-17 21:14:14,671{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:invoke	:write	143
+2018-08-17 21:14:14,686{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:ok	:write	143
+2018-08-17 21:14:16,701{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:invoke	:write	216
+2018-08-17 21:14:17,645{GMT}	INFO	[jepsen nemesis] jepsen.util: :nemesis	:info	:stop	nil
+2018-08-17 21:14:17,647{GMT}	INFO	[jepsen nemesis] jepsen.link: removing artificial network delay
+2018-08-17 21:14:17,809{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:ok	:write	216
+2018-08-17 21:14:18,749{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:invoke	:read	nil
+2018-08-17 21:14:18,975{GMT}	WARN	[jepsen node n4] jepsen.control: Encountered error with conn [:control "n4"]; reopening
+2018-08-17 21:14:19,255{GMT}	WARN	[jepsen node n3] jepsen.control: Encountered error with conn [:control "n3"]; reopening
+2018-08-17 21:14:19,825{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:ok	:read	216
+2018-08-17 21:14:20,750{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:invoke	:write	81
+2018-08-17 21:14:21,748{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:ok	:write	81
+2018-08-17 21:14:22,751{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:invoke	:write	115
+2018-08-17 21:14:23,730{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:ok	:write	115
+2018-08-17 21:14:24,752{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:invoke	:read	nil
+2018-08-17 21:14:24,762{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:ok	:read	115
+2018-08-17 21:14:26,812{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:invoke	:write	131
+2018-08-17 21:14:27,818{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:ok	:write	131
+2018-08-17 21:14:28,828{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:invoke	:write	101
+2018-08-17 21:14:28,837{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:ok	:write	101
+2018-08-17 21:14:29,699{GMT}	INFO	[jepsen nemesis] jepsen.util: :nemesis	:info	:stop	:network-healed
+2018-08-17 21:14:30,830{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:invoke	:read	nil
+2018-08-17 21:14:30,841{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:ok	:read	101
+2018-08-17 21:14:32,831{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:invoke	:write	192
+2018-08-17 21:14:32,841{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:ok	:write	192
+2018-08-17 21:14:34,831{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:invoke	:write	103
+2018-08-17 21:14:34,840{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:ok	:write	103
+2018-08-17 21:14:36,832{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:invoke	:read	nil
+2018-08-17 21:14:36,841{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:ok	:read	103
+2018-08-17 21:14:38,798{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:invoke	:write	218
+2018-08-17 21:14:38,806{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:ok	:write	218
+2018-08-17 21:14:40,799{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:invoke	:write	155
+2018-08-17 21:14:40,809{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:ok	:write	155
+2018-08-17 21:14:42,801{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:invoke	:read	nil
+2018-08-17 21:14:42,810{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:ok	:read	155
+2018-08-17 21:14:44,803{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:invoke	:write	148
+2018-08-17 21:14:44,814{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:ok	:write	148
+2018-08-17 21:14:46,804{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:invoke	:write	192
+2018-08-17 21:14:46,812{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:ok	:write	192
+2018-08-17 21:14:48,805{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:invoke	:read	nil
+2018-08-17 21:14:48,815{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:ok	:read	192
+2018-08-17 21:14:50,806{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:invoke	:write	185
+2018-08-17 21:14:50,816{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:ok	:write	185
+2018-08-17 21:14:52,807{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:invoke	:write	209
+2018-08-17 21:14:52,815{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:ok	:write	209
+2018-08-17 21:14:54,808{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:invoke	:read	nil
+2018-08-17 21:14:54,816{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:ok	:read	209
+2018-08-17 21:14:56,810{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:invoke	:write	214
+2018-08-17 21:14:56,819{GMT}	INFO	[jepsen worker 2] jepsen.util: 2	:ok	:write	214
+2018-08-17 21:14:58,811{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:invoke	:write	193
+2018-08-17 21:14:58,822{GMT}	INFO	[jepsen worker 4] jepsen.util: 4	:ok	:write	193
+2018-08-17 21:15:00,812{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:invoke	:read	nil
+2018-08-17 21:15:00,825{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:ok	:read	193
+2018-08-17 21:15:02,814{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:invoke	:write	98
+2018-08-17 21:15:02,823{GMT}	INFO	[jepsen worker 3] jepsen.util: 3	:ok	:write	98
+2018-08-17 21:15:04,815{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:invoke	:write	205
+2018-08-17 21:15:04,824{GMT}	INFO	[jepsen worker 0] jepsen.util: 0	:ok	:write	205
+2018-08-17 21:15:06,669{GMT}	INFO	[jepsen nemesis] jepsen.util: :nemesis	:info	:start	nil
+2018-08-17 21:15:06,672{GMT}	INFO	[jepsen node n2] jepsen.link: slowing down network by  500.0  milliseconds
+2018-08-17 21:15:06,672{GMT}	INFO	[jepsen node n5] jepsen.link: slowing down network by  500.0  milliseconds
+2018-08-17 21:15:06,672{GMT}	INFO	[jepsen node n3] jepsen.link: slowing down network by  500.0  milliseconds
+2018-08-17 21:15:06,674{GMT}	INFO	[jepsen node n4] jepsen.link: slowing down network by  500.0  milliseconds
+2018-08-17 21:15:06,747{GMT}	WARN	[jepsen node n2] jepsen.control: Encountered error with conn [:control "n2"]; reopening
+2018-08-17 21:15:06,826{GMT}	WARN	[jepsen node n4] jepsen.control: Encountered error with conn [:control "n4"]; reopening
+2018-08-17 21:15:07,185{GMT}	INFO	[jepsen node n5] jepsen.link: 
+2018-08-17 21:15:07,289{GMT}	INFO	[jepsen node n3] jepsen.link: 
+2018-08-17 21:15:08,646{GMT}	INFO	[jepsen node n5] jepsen.link: PING n1 (172.18.0.6) 56(84) bytes of data.
+64 bytes from jepsen-n1.docker_default (172.18.0.6): icmp_seq=1 ttl=64 time=561 ms
+
+--- n1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 561.115/561.115/561.115/0.000 ms
+2018-08-17 21:15:08,872{GMT}	INFO	[jepsen node n3] jepsen.link: PING n1 (172.18.0.6) 56(84) bytes of data.
+64 bytes from jepsen-n1.docker_default (172.18.0.6): icmp_seq=1 ttl=64 time=433 ms
+
+--- n1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 433.853/433.853/433.853/0.000 ms
+2018-08-17 21:15:08,971{GMT}	INFO	[jepsen node n4] jepsen.link: 
+2018-08-17 21:15:09,190{GMT}	INFO	[jepsen node n2] jepsen.link: 
+2018-08-17 21:15:10,455{GMT}	INFO	[jepsen node n4] jepsen.link: PING n1 (172.18.0.6) 56(84) bytes of data.
+64 bytes from jepsen-n1.docker_default (172.18.0.6): icmp_seq=1 ttl=64 time=467 ms
+
+--- n1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 467.210/467.210/467.210/0.000 ms
+2018-08-17 21:15:10,667{GMT}	INFO	[jepsen node n2] jepsen.link: PING n1 (172.18.0.6) 56(84) bytes of data.
+64 bytes from jepsen-n1.docker_default (172.18.0.6): icmp_seq=1 ttl=64 time=472 ms
+
+--- n1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 472.795/472.795/472.795/0.000 ms
+2018-08-17 21:15:11,792{GMT}	INFO	[jepsen nemesis] jepsen.util: :nemesis	:info	:start	[:isolated {"n2" #{"n5" "n4"}, "n1" #{"n5" "n4"}, "n5" #{"n2" "n1"}, "n4" #{"n2" "n1"}}]
+2018-08-17 21:15:18,799{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:info	:log-packet-data	nil
+2018-08-17 21:15:19,932{GMT}	INFO	[jepsen worker 1] jepsen.util: 6	:info	:log-packet-data	nil
+2018-08-17 21:15:31,937{GMT}	INFO	[jepsen worker 3] jepsen.core: Stopping worker 3
+2018-08-17 21:15:31,937{GMT}	INFO	[jepsen worker 1] jepsen.core: Stopping worker 1
+2018-08-17 21:15:31,938{GMT}	INFO	[jepsen worker 0] jepsen.core: Stopping worker 0
+2018-08-17 21:15:31,938{GMT}	INFO	[jepsen worker 2] jepsen.core: Stopping worker 2
+2018-08-17 21:15:31,938{GMT}	INFO	[jepsen worker 4] jepsen.core: Stopping worker 4
+2018-08-17 21:15:31,938{GMT}	INFO	[jepsen nemesis] jepsen.core: Stopping nemesis
+2018-08-17 21:15:33,492{GMT}	WARN	[jepsen node n2] jepsen.control: Encountered error with conn [:control "n2"]; reopening
+2018-08-17 21:15:40,913{GMT}	WARN	[jepsen node n3] jepsen.control: Encountered error with conn [:control "n3"]; reopening
+2018-08-17 21:15:41,004{GMT}	WARN	[jepsen node n4] jepsen.control: Encountered error with conn [:control "n4"]; reopening
+2018-08-17 21:15:41,071{GMT}	WARN	[jepsen node n2] jepsen.control: Encountered error with conn [:control "n2"]; reopening
+2018-08-17 21:15:42,801{GMT}	INFO	[jepsen test runner] jepsen.core: Snarfing log files
+2018-08-17 21:15:42,817{GMT}	INFO	[jepsen node n4] jepsen.core: downloading /link.log to link.log
+2018-08-17 21:15:42,817{GMT}	INFO	[jepsen node n3] jepsen.core: downloading /link.log to link.log
+2018-08-17 21:15:42,818{GMT}	INFO	[jepsen node n2] jepsen.core: downloading /link.log to link.log
+2018-08-17 21:15:42,818{GMT}	INFO	[jepsen node n5] jepsen.core: downloading /link.log to link.log
+2018-08-17 21:15:42,826{GMT}	INFO	[jepsen node n1] jepsen.core: downloading /link.log to link.log
+2018-08-17 21:15:43,485{GMT}	INFO	[jepsen node n5] jepsen.core: downloading /iptables.log to iptables.log
+2018-08-17 21:15:43,514{GMT}	INFO	[jepsen node n4] jepsen.core: downloading /iptables.log to iptables.log
+2018-08-17 21:15:43,553{GMT}	INFO	[jepsen node n2] jepsen.core: downloading /iptables.log to iptables.log
+2018-08-17 21:15:43,607{GMT}	INFO	[jepsen node n1] jepsen.core: downloading /iptables.log to iptables.log
+2018-08-17 21:15:43,715{GMT}	INFO	[jepsen node n3] jepsen.core: downloading /iptables.log to iptables.log
+2018-08-17 21:15:43,746{GMT}	INFO	[jepsen test runner] jepsen.core: Run complete, writing
+2018-08-17 21:15:44,027{GMT}	INFO	[jepsen node n3] jepsen.link: n3 NOT tearing down link
+2018-08-17 21:15:44,033{GMT}	INFO	[jepsen node n4] jepsen.link: n4 NOT tearing down link
+2018-08-17 21:15:44,040{GMT}	INFO	[jepsen node n5] jepsen.link: n5 NOT tearing down link
+2018-08-17 21:15:44,051{GMT}	INFO	[jepsen node n2] jepsen.link: n2 NOT tearing down link
+2018-08-17 21:15:44,055{GMT}	INFO	[jepsen node n1] jepsen.link: n1 NOT tearing down link
+2018-08-17 21:15:44,087{GMT}	INFO	[jepsen test runner] jepsen.core: Analyzing
+2018-08-17 21:15:44,983{GMT}	INFO	[jepsen test runner] jepsen.core: Analysis complete
+2018-08-17 21:15:45,042{GMT}	INFO	[jepsen results] jepsen.store: Wrote /jepsen/store/link/20180817T211056.000Z/results.edn
+2018-08-17 21:15:45,078{GMT}	INFO	[main] jepsen.core: {:perf
+ {:latency-graph {:valid? true},
+  :rate-graph {:valid? true},
+  :valid? true},
+ :linear
+ {:valid? true,
+  :configs
+  ({:model {:value 205},
+    :last-op
+    {:process 0,
+     :type :ok,
+     :f :write,
+     :value 205,
+     :index 179,
+     :time 186111041900},
+    :pending []}),
+  :final-paths ()},
+ :timeline {:valid? true},
+ :valid? true}
+
+
+Everything looks good! ヽ(‘ー`)ノ

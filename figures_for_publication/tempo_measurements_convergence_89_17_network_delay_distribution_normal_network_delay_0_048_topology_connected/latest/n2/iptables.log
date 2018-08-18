@@ -1,0 +1,18 @@
+Chain INPUT (policy ACCEPT 13567 packets, 1527K bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+ 1637  221K            udp  --  any    any     jepsen-n5.docker_default  anywhere             /* Logging UDP from 172.18.0.2 */
+ 1641  222K            udp  --  any    any     jepsen-n4.docker_default  anywhere             /* Logging UDP from 172.18.0.5 */
+ 1638  221K            udp  --  any    any     jepsen-n3.docker_default  anywhere             /* Logging UDP from 172.18.0.7 */
+    0     0            udp  --  any    any     n2                   anywhere             /* Logging UDP from 172.18.0.4 */
+ 2043  262K            udp  --  any    any     jepsen-n1.docker_default  anywhere             /* Logging UDP from 172.18.0.6 */
+
+Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain OUTPUT (policy ACCEPT 13728 packets, 1291K bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+10871 1165K            udp  --  any    any     anywhere             anywhere             /* Logging outgoing UDP */
+10895 1167K            udp  --  any    any     anywhere             anywhere             /* Logging outgoing UDP */
+10919 1170K            udp  --  any    any     anywhere             anywhere             /* Logging outgoing UDP */
+10941 1172K            udp  --  any    any     anywhere             anywhere             /* Logging outgoing UDP */
+10960 1174K            udp  --  any    any     anywhere             anywhere             /* Logging outgoing UDP */

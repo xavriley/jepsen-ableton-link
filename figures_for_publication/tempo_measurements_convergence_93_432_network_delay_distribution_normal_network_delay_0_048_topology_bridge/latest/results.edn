@@ -1,0 +1,19 @@
+{:perf
+ {:latency-graph {:valid? true},
+  :rate-graph {:valid? true},
+  :valid? true},
+ :linear
+ {:valid? true,
+  :configs
+  ({:model {:value 195},
+    :last-op
+    {:process 0,
+     :type :ok,
+     :f :write,
+     :value 195,
+     :index 179,
+     :time 182238930800},
+    :pending []}),
+  :final-paths ()},
+ :timeline {:valid? true},
+ :valid? true}

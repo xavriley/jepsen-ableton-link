@@ -1,0 +1,34 @@
+{:perf
+ {:latency-graph {:valid? true},
+  :rate-graph {:valid? true},
+  :valid? true},
+ :linear
+ {:valid? true,
+  :configs
+  ({:model {:value 49},
+    :last-op
+    {:process 4,
+     :type :ok,
+     :f :write,
+     :value 49,
+     :index 181,
+     :time 185466041800},
+    :pending
+    [{:process 3,
+      :type :invoke,
+      :f :read,
+      :value nil,
+      :index 94,
+      :time 103035765000}]}
+   {:model {:value 49},
+    :last-op
+    {:process 4,
+     :type :ok,
+     :f :write,
+     :value 49,
+     :index 181,
+     :time 185466041800},
+    :pending []}),
+  :final-paths ()},
+ :timeline {:valid? true},
+ :valid? true}
