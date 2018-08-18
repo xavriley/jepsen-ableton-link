@@ -18,18 +18,18 @@ export JEPSEN_ROOT="/path/to/jepsen.link"
 
 # in another window
 docker exec -it jepsen-control bash
-lein run test --time-limit 180 --no-teardown --topology line --network-delay 0.5
+lein run test --time-limit 180 --no-teardown --topology line --network-delay 0.5 --nemesis-duration 30 --network-delay-distribution constant
 ```
 
 Once that has completed, run
 
 ```
-grep -Hn '^' store/latest/{jepsen.log,history.edn,n*/link.log,n*/iptables.log} | ruby tempo-grapher.rb && open plot.pdf
+ruby tempo-grapher.rb && open plot.pdf
 ```
 
 To generate the graphs.
 
-See [the plot.pdf files in figures_for_publication](figures_for_publication/connected_no_delay/plot.pdf) for examples of the output.
+See [the plot.pdf files in figures_for_publication](figures_for_publication/) for examples of the output.
 
 ## License
 
